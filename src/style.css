@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+}
+
+#root {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+}
+
+#game {
+    position: relative;
+
+    width: 1000px;
+    height: 800px;
+
+    background-color: #000000;
+}
+
+.game-entities {
+    position: static;
+}
+
+.entity {
+}
+
+.player {
+}
