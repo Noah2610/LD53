@@ -24,7 +24,23 @@ body {
 }
 
 .entity {
+    --width: 64px;
+    --height: 64px;
+    --sprite-scale: 2;
+
+    width: calc(var(--width) * var(--sprite-scale));
+    height: calc(var(--height) * var(--sprite-scale));
+
+    position: absolute;
 }
 
 .player {
+    --width: 32px;
+    --height: 64px;
+
+    background-image: url("sprites/larry.png");
+
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
