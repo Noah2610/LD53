@@ -1,6 +1,10 @@
 import * as express from "express";
 import * as ws from "ws";
 import { v4 as genUuid } from "uuid";
+// @ts-ignore
+import { hello } from "ld53-lib";
+
+hello();
 
 const PORT = 8090;
 const HOST = "0.0.0.0";
