@@ -5,23 +5,20 @@ export interface System {
     update?(): void;
 }
 
-class UpdateElementPositions implements System {
-    public update() {
-        for (const entity of STATE.entities) {
-            const sprite = entity.getComponent("sprite");
-            const position = entity.getComponent("position");
+// class UpdateElementPositions implements System {
+//     public update() {
+//         for (const { position, sprite } of STATE.query({
+//             with: ["position", "sprite"],
+//         })) {
+//             this.setElementPosition(sprite.el, position);
+//         }
+//     }
 
-            if (sprite && position) {
-                this.setElementPosition(sprite.el, position);
-            }
-        }
-    }
-
-    private setElementPosition(el: HTMLElement, pos: Position) {
-        el.style.left = `${pos.x}px`;
-        el.style.top = `${pos.y}px`;
-    }
-}
+//     private setElementPosition(el: HTMLElement, pos: Position) {
+//         el.style.left = `${pos.x}px`;
+//         el.style.top = `${pos.y}px`;
+//     }
+// }
 
 export function setupSystems() {
     function updateActions() {
@@ -39,14 +36,9 @@ export function setupSystems() {
     }
 
     function handleControls() {
-        for (const entity of STATE.entities) {
-            const player = entity.getComponent("player");
-            const position = entity.getComponent("position");
-
-            if (!player || !position) {
-                continue;
-            }
-
+        for (const { player, position } of STATE.query({
+            with: ["player", "position"],
+        })) {
             const STEP = player.speed;
 
             const up = STATE.actions.get("up");
@@ -66,6 +58,19 @@ export function setupSystems() {
             if (right) {
                 position.x += STEP;
             }
+        }
+    }
+
+    function updateElementPositions() {
+        function setElementPosition(el: HTMLElement, pos: Position) {
+            el.style.left = `${pos.x}px`;
+            el.style.top = `${pos.y}px`;
+        }
+
+        for (const { position, sprite } of STATE.query({
+            with: ["position", "sprite"],
+        })) {
+            setElementPosition(sprite.el, position);
         }
     }
 
