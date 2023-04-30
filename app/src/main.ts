@@ -52,20 +52,18 @@ const STATE: State = {
     actions: new Map(),
 };
 
+let WS: WebSocket | null = null;
+
 // @ts-ignore
 window.STATE = STATE;
 
-function main() {
+async function main() {
     setupPlayer();
     setupControls();
     setupSystems();
-    setupSocket();
 
-    for (const notif of ["error", "warning", "success", "info"] as const) {
-        addNotification(notif, `This is a ${notif} notification.`, {
-            timeoutMs: 500,
-        });
-    }
+    await setupSocket();
+    sendMessage({ type: "ping" });
 }
 
 function addNotification(
@@ -95,28 +93,71 @@ function addNotification(
     }
 }
 
-function setupSocket() {
-    const ws = new WebSocket(`ws://${SERVER_URL}`);
+function setupSocket(): Promise<WebSocket> {
+    return new Promise((resolve) => {
+        const ws = new WebSocket(`ws://${SERVER_URL}`);
+        WS = ws;
 
-    ws.addEventListener("open", (e) => {
-        console.log("Connected to server");
-        addNotification("success", "Connected to server", { timeoutMs: 2000 });
-    });
+        ws.addEventListener("open", (e) => {
+            console.log("Connected to server");
+            addNotification("success", "Connected to server", {
+                timeoutMs: 2000,
+            });
 
-    ws.addEventListener("error", (e) => {
-        console.error("Error connecting to server");
-        addNotification("error", "Error connecting to server");
-        ws.close();
-    });
+            resolve(ws);
+        });
 
-    ws.addEventListener("close", (e) => {
-        console.log(`Disconnected from server: ${e.code} ${e.reason}`);
-        addNotification(
-            "warning",
-            `Disconnected from server: ${e.code} ${e.reason}`,
-        );
-        ws.close();
+        ws.addEventListener("error", (e) => {
+            console.error("Error connecting to server");
+            addNotification("error", "Error connecting to server");
+            ws.close();
+        });
+
+        ws.addEventListener("close", (e) => {
+            console.log(`Disconnected from server: ${e.code} ${e.reason}`);
+            addNotification(
+                "warning",
+                `Disconnected from server: ${e.code} ${e.reason}`,
+            );
+            ws.close();
+        });
+
+        ws.addEventListener("message", (event) => {
+            try {
+                const json = JSON.parse(event.data);
+                onServerMessage(json);
+            } catch (err) {
+                console.error("Error parsing server message", err);
+                addNotification(
+                    "error",
+                    `Error parsing server message: ${event.data}`,
+                );
+            }
+        });
     });
+}
+
+function onServerMessage(message: Message) {
+    switch (message.type) {
+        case "pong": {
+            console.log("Received pong from server");
+            addNotification("success", "Received pong from server", {
+                timeoutMs: 2000,
+            });
+            break;
+        }
+    }
+}
+
+// TODO
+type Message = any;
+
+function sendMessage(message: Message) {
+    if (!WS) {
+        throw new Error("No websocket connection");
+    }
+
+    WS.send(JSON.stringify(message));
 }
 
 function setupPlayer() {

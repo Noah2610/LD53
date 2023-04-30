@@ -44,7 +44,31 @@ wss.on("connection", (ws) => {
         console.log(`Client disconnected: ${code}`);
         removeClient(client.id);
     });
+
+    ws.on("message", (data) => {
+        try {
+            const json = JSON.parse(data.toString());
+            onClientMessage(client, json);
+        } catch (e) {
+            console.error(`Error parsing client message: ${e}`);
+        }
+    });
 });
+
+// TODO
+type Message = any;
+
+function onClientMessage(client: Client, message: Message) {
+    console.log("Client message", message);
+
+    switch (message.type) {
+        case "ping": {
+            const message = { type: "pong" };
+            client.ws.send(JSON.stringify(message));
+            break;
+        }
+    }
+}
 
 const server = expressServer.listen(PORT, HOST, () => {
     console.log(`Server listening on ${HOST}:${PORT}`);
