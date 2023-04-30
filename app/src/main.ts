@@ -45,6 +45,8 @@ const CONTROLS = {
 
 type ActionName = keyof typeof CONTROLS;
 
+const SERVER_URL = "0.0.0.0:8090";
+
 const STATE: State = {
     entities: [],
     actions: new Map(),
@@ -56,8 +58,50 @@ window.STATE = STATE;
 function main() {
     setupPlayer();
     setupControls();
-
     setupSystems();
+    setupSocket();
+
+    for (const notif of ["error", "warning", "success", "info"] as const) {
+        addNotification(notif, `This is a ${notif} notification.`);
+    }
+}
+
+function addNotification(
+    type: "error" | "warning" | "success" | "info",
+    message: string,
+) {
+    const notifsEl = document.querySelector(".notifications");
+    if (!notifsEl) {
+        throw new Error("Expected .notifications element");
+    }
+
+    const notifEl = document.createElement("div");
+    notifEl.classList.add("notification", type);
+    notifEl.innerText = message;
+
+    const closeEl = document.createElement("button");
+    closeEl.classList.add("notification-close");
+    closeEl.innerText = "x";
+    closeEl.addEventListener("click", () => notifEl.remove());
+
+    notifEl.appendChild(closeEl);
+    notifsEl.appendChild(notifEl);
+}
+
+function setupSocket() {
+    const ws = new WebSocket(`ws://${SERVER_URL}`);
+
+    ws.addEventListener("open", (e) => {
+        console.log("Connected to server");
+    });
+
+    ws.addEventListener("error", (e) => {
+        console.error("Error connecting to server");
+    });
+
+    ws.addEventListener("close", (e) => {
+        console.log(`Disconnected from server: ${e.code} ${e.reason}`);
+    });
 }
 
 function setupPlayer() {

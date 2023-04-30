@@ -12,7 +12,7 @@ wss.on("connection", (ws) => {
         console.log(`Client disconnected: ${code}`);
     });
 
-    console.log("Client connected: ");
+    console.log(`Client connected: ${ws.url}`);
 });
 
 const server = expressServer.listen(PORT, HOST, () => {
