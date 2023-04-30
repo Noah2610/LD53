@@ -172,6 +172,24 @@ function onClientMessage(client: Client, message: ClientMessage) {
             client.leave();
             break;
         }
+        case "playerPosition": {
+            broadcast(
+                {
+                    type: "playerPosition",
+                    payload: [
+                        {
+                            id: client.id,
+                            position: {
+                                x: message.payload.position.x,
+                                y: message.payload.position.y,
+                            },
+                        },
+                    ],
+                },
+                client,
+            );
+            break;
+        }
         default: {
             console.error(`Unimplemented message type:`, message);
             break;
@@ -181,7 +199,8 @@ function onClientMessage(client: Client, message: ClientMessage) {
 
 function broadcast(message: Unauthed<ServerMessage>, from: Client | null) {
     for (const client of STATE.clients.values()) {
-        if (client === from) {
+        console.log("TEST", client.id, from?.id, client.id === from?.id);
+        if (from && client.id === from.id) {
             continue;
         }
         client.sendAuthed(message);

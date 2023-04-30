@@ -31,16 +31,45 @@ export function setupPlayer({
     id: string;
     isYou: boolean;
 }): Entity {
-    // TODO
-    const el = document.querySelector<HTMLElement>(".player.entity")!;
+    // TODO move to Sprite component
+    const el = document.createElement("div");
+    el.classList.add("player", "entity");
+    document.querySelector(".game-entities")!.appendChild(el);
 
-    if (!el) {
-        throw new Error("Expected .player element");
-    }
-
-    return STATE.createEntity("player").add(
-        { name: "player", isYou, id: null, speed: 2 },
+    return STATE.createEntity(`player-${id}`).add(
+        { name: "player", isYou, id, speed: 2 },
         { name: "sprite", el },
         { name: "position", x: 0, y: 0 },
     );
+}
+
+// TODO
+export function removePlayer(playerId: string) {
+    for (const { entity, player, sprite } of STATE.query({
+        with: ["player", "sprite"],
+    })) {
+        if (player.id !== playerId) {
+            continue;
+        }
+
+        sprite.el.remove();
+        entity.destroy();
+    }
+}
+
+// TODO
+export function setPlayerPosition(
+    playerId: string,
+    pos: { x: number; y: number },
+) {
+    for (const { player, position } of STATE.query({
+        with: ["player", "position"],
+    })) {
+        if (player.id !== playerId) {
+            continue;
+        }
+
+        position.x = pos.x;
+        position.y = pos.y;
+    }
 }

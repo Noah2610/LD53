@@ -31,12 +31,18 @@ export interface ServerMessagePlayerLeave extends AuthedMessage {
     payload: Omit<PlayerInfo, "position">[];
 }
 
+export interface ServerMessagePlayerPosition extends AuthedMessage {
+    type: "playerPosition";
+    payload: PlayerInfo[];
+}
+
 export type ServerMessage = BaseMessage &
     (
         | ServerMessagePong
         | ServerMessageAuth
         | ServerMessagePlayerJoin
         | ServerMessagePlayerLeave
+        | ServerMessagePlayerPosition
     );
 
 // ----------------------------------------
@@ -47,17 +53,25 @@ export interface ClientMessagePing {
 
 export interface ClientMessageJoin extends AuthedMessage {
     type: "join";
-    auth: string;
     payload: PlayerInfo;
 }
 
 export interface ClientMessageLeave extends AuthedMessage {
     type: "leave";
-    auth: string;
+}
+
+export interface ClientMessagePlayerPosition extends AuthedMessage {
+    type: "playerPosition";
+    payload: PlayerInfo;
 }
 
 export type ClientMessage = BaseMessage &
-    (ClientMessagePing | ClientMessageJoin | ClientMessageLeave);
+    (
+        | ClientMessagePing
+        | ClientMessageJoin
+        | ClientMessageLeave
+        | ClientMessagePlayerPosition
+    );
 
 // ----------------------------------------
 

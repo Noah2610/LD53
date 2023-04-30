@@ -4,9 +4,11 @@ import {
     ServerMessageAuth,
     ServerMessagePlayerJoin,
     ServerMessagePlayerLeave,
+    ServerMessagePlayerPosition,
     Unauthed,
 } from "ld53-lib/types";
 import { SERVER_URL } from "./config";
+import { removePlayer, setPlayerPosition, setupPlayer } from "./entities";
 import { STATE } from "./state";
 import { addNotification } from "./ui";
 
@@ -152,6 +154,9 @@ export class Conn {
                 this.onPlayerLeave(message);
                 return;
             }
+            case "playerPosition": {
+                this.onPlayerPosition(message);
+            }
         }
     }
 
@@ -178,12 +183,30 @@ export class Conn {
     }
 
     private onPlayerJoin(message: ServerMessagePlayerJoin) {
-        if (message.id === this.clientId) {
-            return;
+        for (const payload of message.payload) {
+            if (payload.id === this.clientId) {
+                continue;
+            }
+
+            // TODO
+            setupPlayer({
+                id: payload.id,
+                isYou: false,
+            });
         }
     }
 
-    private onPlayerLeave(message: ServerMessagePlayerLeave) {}
+    private onPlayerLeave(message: ServerMessagePlayerLeave) {
+        for (const payload of message.payload) {
+            removePlayer(payload.id);
+        }
+    }
+
+    private onPlayerPosition(message: ServerMessagePlayerPosition) {
+        for (const payload of message.payload) {
+            setPlayerPosition(payload.id, payload.position);
+        }
+    }
 }
 
 export function setupSocket(
