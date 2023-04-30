@@ -1,23 +1,29 @@
 import { Position } from "../components";
 import { STATE } from "../state";
 
-export function setupSystems() {
-    function updateElementPositions() {
-        function setElementPosition(el: HTMLElement, pos: Position) {
-            el.style.left = `${pos.x}px`;
-            el.style.top = `${pos.y}px`;
-        }
+export interface System {
+    update?(): void;
+}
 
+class UpdateElementPositions implements System {
+    public update() {
         for (const entity of STATE.entities) {
             const sprite = entity.getComponent("sprite");
             const position = entity.getComponent("position");
 
             if (sprite && position) {
-                setElementPosition(sprite.el, position);
+                this.setElementPosition(sprite.el, position);
             }
         }
     }
 
+    private setElementPosition(el: HTMLElement, pos: Position) {
+        el.style.left = `${pos.x}px`;
+        el.style.top = `${pos.y}px`;
+    }
+}
+
+export function setupSystems() {
     function updateActions() {
         for (const [action, state] of STATE.actions.entries()) {
             switch (state) {

@@ -1,23 +1,26 @@
 import { Component, ComponentName, ComponentOfName } from "../components";
-import { STATE } from "../state";
+import { State, STATE, StateEntityApi } from "../state";
 
-export class Entity {
-    public id: string;
-    private components: Component[];
+export type EntityId = string;
 
-    constructor(id: string, components: Component[]) {
+export class Entity implements StateEntityApi {
+    public id: EntityId;
+
+    public get: StateEntityApi["get"];
+    public add: StateEntityApi["add"];
+    public remove: StateEntityApi["remove"];
+    public destroy: StateEntityApi["destroy"];
+
+    private api: StateEntityApi;
+
+    constructor(id: string, api: StateEntityApi) {
         this.id = id;
-        this.components = components;
-    }
+        this.api = api;
 
-    public getComponent<N extends ComponentName>(
-        name: N,
-    ): ComponentOfName<N> | null {
-        return (
-            (this.components.find(
-                (c) => c.name === name,
-            ) as ComponentOfName<N> | null) ?? null
-        );
+        this.get = this.api.get;
+        this.add = this.api.add;
+        this.remove = this.api.remove;
+        this.destroy = this.api.destroy;
     }
 }
 
@@ -29,11 +32,9 @@ export function setupPlayer() {
         throw new Error("Expected .player element");
     }
 
-    const player = new Entity("player", [
+    STATE.createEntity("player").add(
         { name: "player", speed: 2 },
         { name: "sprite", el },
         { name: "position", x: 0, y: 0 },
-    ]);
-
-    STATE.entities.push(player);
+    );
 }
