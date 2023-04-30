@@ -7,6 +7,7 @@ import "./style.css";
 
 async function main() {
     setupControls();
+    setupPlayerNameInput();
     setupSystems();
 
     // TODO:
@@ -23,6 +24,7 @@ async function main() {
 
             const entity = setupPlayer({
                 id: conn.clientId,
+                playerName: "Player", // TODO
                 isYou: true,
                 position: { x: 100, y: 100 },
             });
@@ -39,7 +41,6 @@ async function main() {
             conn.sendAuthed({
                 type: "join",
                 payload: {
-                    id: player.id,
                     position: {
                         x: position.x,
                         y: position.y,
@@ -76,10 +77,49 @@ function setupControls() {
     }
 
     document.addEventListener("keydown", (e) => {
+        const target = e.target as HTMLElement;
+        if (
+            target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.tagName === "BUTTON"
+        ) {
+            return;
+        }
         onKeyDown(e.key.toLowerCase());
     });
     document.addEventListener("keyup", (e) => {
+        const target = e.target as HTMLElement;
+        if (
+            target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.tagName === "BUTTON"
+        ) {
+            return;
+        }
         onKeyUp(e.key.toLowerCase());
+    });
+}
+
+function setupPlayerNameInput() {
+    const form = document.querySelector<HTMLFormElement>("#player-name-form");
+    if (!form) {
+        throw new Error("Expected to find #player-name-form element");
+    }
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if (!STATE.conn) {
+            return;
+        }
+
+        const formData = new FormData(form);
+        const name = formData.get("player-name") as string | null;
+        if (!name) {
+            return;
+        }
+
+        STATE.conn.setPlayerName(name);
     });
 }
 

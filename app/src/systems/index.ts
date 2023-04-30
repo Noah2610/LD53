@@ -57,7 +57,6 @@ class HandleControls implements System {
             STATE.conn?.sendAuthed({
                 type: "playerPosition",
                 payload: {
-                    id: player.id,
                     position: {
                         x: position.x,
                         y: position.y,

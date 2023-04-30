@@ -2,6 +2,7 @@ import * as cors from "cors";
 import * as express from "express";
 import { ClientMessage, ServerMessage, Unauthed } from "ld53-lib/types";
 import * as ws from "ws";
+import { expectNever } from "ts-expect";
 import { Client } from "./client";
 import { APP_URL, HOST, PORT } from "./config";
 import { STATE } from "./state";
@@ -104,12 +105,16 @@ export class Server {
                 break;
             }
             case "playerPosition": {
-                client.setPlayerPosition(message.payload);
+                client.setPlayerPosition(message.payload.position);
+                break;
+            }
+            case "playerName": {
+                client.setPlayerName(message.payload.name);
                 break;
             }
             default: {
                 console.error(`Unimplemented message type:`, message);
-                break;
+                expectNever(message);
             }
         }
     }

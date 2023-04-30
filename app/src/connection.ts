@@ -4,11 +4,18 @@ import {
     ServerMessageAuth,
     ServerMessagePlayerJoin,
     ServerMessagePlayerLeave,
+    ServerMessagePlayerName,
     ServerMessagePlayerPosition,
     Unauthed,
 } from "ld53-lib/types";
+import { expectNever } from "ts-expect";
 import { SERVER_URL } from "./config";
-import { removePlayer, setPlayerPosition, setupPlayer } from "./entities";
+import {
+    removePlayer,
+    setPlayerName,
+    setPlayerPosition,
+    setupPlayer,
+} from "./entities";
 import { STATE } from "./state";
 import { addNotification } from "./ui";
 
@@ -124,6 +131,15 @@ export class Conn {
         });
     }
 
+    public setPlayerName(name: string) {
+        this.sendAuthed({
+            type: "playerName",
+            payload: {
+                name,
+            },
+        });
+    }
+
     private onServerMessage(message: ServerMessage) {
         console.log("ServerMessage:", message);
 
@@ -156,6 +172,14 @@ export class Conn {
             }
             case "playerPosition": {
                 this.onPlayerPosition(message);
+                return;
+            }
+            case "playerName": {
+                this.onPlayerName(message);
+                return;
+            }
+            default: {
+                expectNever(message);
             }
         }
     }
@@ -191,6 +215,7 @@ export class Conn {
             // TODO
             setupPlayer({
                 id: payload.id,
+                playerName: payload.name,
                 isYou: false,
                 position: payload.position,
             });
@@ -206,6 +231,12 @@ export class Conn {
     private onPlayerPosition(message: ServerMessagePlayerPosition) {
         for (const payload of message.payload) {
             setPlayerPosition(payload.id, payload.position);
+        }
+    }
+
+    private onPlayerName(message: ServerMessagePlayerName) {
+        for (const payload of message.payload) {
+            setPlayerName(payload.id, payload.name);
         }
     }
 }

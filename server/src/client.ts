@@ -2,6 +2,7 @@ import {
     ClientMessageJoin,
     ClientMessagePlayerPosition,
     ServerMessage,
+    ServerMessagePlayerJoin,
     Unauthed,
 } from "ld53-lib/types";
 import * as ws from "ws";
@@ -49,13 +50,24 @@ export class Client {
     }
 
     public join(info: ClientMessageJoin["payload"]) {
-        this.player = new Player(info.id);
-        this.player.setPosition(info.position);
+        this.player = new Player({
+            id: this.id,
+            name: info.name,
+            position: info.position,
+        });
+
+        if (this.player.name !== info.name) {
+            this.sendAuthed({
+                type: "playerName",
+                payload: [{ id: this.id, name: this.player.name }],
+            });
+        }
 
         const playerJoinedPayload = [...STATE.clients.values()]
             .filter((c) => c.player && c.id !== this.id)
-            .map<ClientMessageJoin["payload"]>((c) => ({
+            .map<ServerMessagePlayerJoin["payload"][number]>((c) => ({
                 id: c.id,
+                name: c.player!.name,
                 position: c.player!.position,
             }));
         if (playerJoinedPayload.length > 0) {
@@ -71,6 +83,7 @@ export class Client {
                 payload: [
                     {
                         id: this.id,
+                        name: this.player.name,
                         position: {
                             x: this.player.position.x,
                             y: this.player.position.y,
@@ -92,8 +105,8 @@ export class Client {
         );
     }
 
-    public setPlayerPosition(payload: ClientMessagePlayerPosition["payload"]) {
-        this.player?.setPosition(payload.position);
+    public setPlayerPosition(position: { x: number; y: number }) {
+        this.player?.setPosition(position);
 
         STATE.server.broadcast(
             {
@@ -102,13 +115,34 @@ export class Client {
                     {
                         id: this.id,
                         position: {
-                            x: payload.position.x,
-                            y: payload.position.y,
+                            x: position.x,
+                            y: position.y,
                         },
                     },
                 ],
             },
             this,
+        );
+    }
+
+    public setPlayerName(name: string) {
+        if (!this.player) {
+            throw new Error("[setPlayerName] Player not found");
+        }
+
+        this.player.setName(name);
+
+        STATE.server.broadcast(
+            {
+                type: "playerName",
+                payload: [
+                    {
+                        id: this.id,
+                        name: this.player.name,
+                    },
+                ],
+            },
+            null,
         );
     }
 }

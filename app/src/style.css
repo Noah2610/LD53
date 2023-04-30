@@ -1,3 +1,8 @@
+:root {
+    --game-width: 1000px;
+    --game-height: 800px;
+}
+
 body {
     margin: 0;
     font-size: 20px;
@@ -16,14 +21,16 @@ button {
     inset: 0;
 
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 #game {
     position: relative;
 
-    width: 1000px;
-    height: 800px;
+    width: var(--game-width);
+    height: var(--game-height);
 
     background-color: #000000;
 }
@@ -52,6 +59,22 @@ button {
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player > .player-name {
+    position: absolute;
+    padding: 0.2rem 0.5rem;
+    top: -0.5rem;
+    transform: translateY(-100%);
+
+    font-size: 1rem;
+    text-align: center;
+
+    background-color: #ffffff66;
 }
 
 .notifications {
@@ -96,4 +119,26 @@ button {
 .notification.info {
     background-color: #00c2d6;
     border-color: #00e7ff;
+}
+
+.player-name-form {
+    position: relative;
+    max-width: var(--game-width);
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 2rem;
+}
+
+.player-name-form > input.player-name-input {
+    flex-grow: 1;
+    box-sizing: border-box;
+
+    font-size: inherit;
+}
+
+.player-name-form > button.player-name-submit {
+    font-size: inherit;
 }

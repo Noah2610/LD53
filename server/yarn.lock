@@ -705,6 +705,11 @@ touch@^3.1.0:
   dependencies:
     nopt "~1.0.10"
 
+ts-expect@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ts-expect/-/ts-expect-1.3.0.tgz#3f8d3966e0e22b5e2bb88337eb99db6816a4c1cf"
+  integrity sha512-e4g0EJtAjk64xgnFPD6kTBUtpnMVzDrMb12N1YZV0VvSlhnVT3SGxiYTLdGy8Q5cYHOIC/FAHmZ10eGrAguicQ==
+
 type-is@~1.6.18:
   version "1.6.18"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.18.tgz#4e552cd05df09467dcbc4ef739de89f2cf37c131"

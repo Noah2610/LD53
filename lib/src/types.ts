@@ -25,6 +25,7 @@ export interface ServerMessagePlayerJoin extends AuthedMessage {
     type: "playerJoin";
     payload: {
         id: string;
+        name: string;
         position: { x: number; y: number };
     }[];
 }
@@ -42,6 +43,14 @@ export interface ServerMessagePlayerPosition extends AuthedMessage {
     }[];
 }
 
+export interface ServerMessagePlayerName extends AuthedMessage {
+    type: "playerName";
+    payload: {
+        id: string;
+        name: string;
+    }[];
+}
+
 export type ServerMessage = BaseMessage &
     (
         | ServerMessagePong
@@ -49,6 +58,7 @@ export type ServerMessage = BaseMessage &
         | ServerMessagePlayerJoin
         | ServerMessagePlayerLeave
         | ServerMessagePlayerPosition
+        | ServerMessagePlayerName
     );
 
 // ----------------------------------------
@@ -60,7 +70,7 @@ export interface ClientMessagePing {
 export interface ClientMessageJoin extends AuthedMessage {
     type: "join";
     payload: {
-        id: string;
+        name?: string;
         position: { x: number; y: number };
     };
 }
@@ -72,8 +82,14 @@ export interface ClientMessageLeave extends AuthedMessage {
 export interface ClientMessagePlayerPosition extends AuthedMessage {
     type: "playerPosition";
     payload: {
-        id: string;
         position: { x: number; y: number };
+    };
+}
+
+export interface ClientMessagePlayerName extends AuthedMessage {
+    type: "playerName";
+    payload: {
+        name: string;
     };
 }
 
@@ -83,4 +99,5 @@ export type ClientMessage = BaseMessage &
         | ClientMessageJoin
         | ClientMessageLeave
         | ClientMessagePlayerPosition
+        | ClientMessagePlayerName
     );

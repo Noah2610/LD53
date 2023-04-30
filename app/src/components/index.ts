@@ -21,5 +21,6 @@ export interface Player {
     name: "player";
     isYou: boolean;
     id: string;
+    playerName: string;
     speed: number;
 }

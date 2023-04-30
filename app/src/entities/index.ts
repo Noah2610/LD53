@@ -26,20 +26,26 @@ export class Entity implements StateEntityApi {
 
 export function setupPlayer({
     id,
+    playerName,
     isYou,
     position,
 }: {
     id: string;
+    playerName: string;
     isYou: boolean;
     position: { x: number; y: number };
 }): Entity {
     // TODO move to Sprite component
     const el = document.createElement("div");
     el.classList.add("player", "entity");
+    const nameEl = document.createElement("div");
+    nameEl.classList.add("player-name");
+    nameEl.innerText = playerName;
+    el.appendChild(nameEl);
     document.querySelector(".game-entities")!.appendChild(el);
 
     return STATE.createEntity(`player-${id}`).add(
-        { name: "player", isYou, id, speed: 2 },
+        { name: "player", isYou, id, playerName, speed: 2 },
         { name: "sprite", el },
         { name: "position", x: position.x, y: position.y },
     );
@@ -73,5 +79,27 @@ export function setPlayerPosition(
 
         position.x = pos.x;
         position.y = pos.y;
+    }
+}
+
+// TODO
+export function setPlayerName(playerId: string, name: string) {
+    for (const { player, sprite } of STATE.query({
+        with: ["player", "sprite"],
+    })) {
+        if (player.id !== playerId) {
+            continue;
+        }
+
+        player.playerName = name;
+
+        // TODO
+        sprite.el.querySelector<HTMLElement>(".player-name")!.innerText = name;
+        const input = document.querySelector<HTMLInputElement>(
+            "input.player-name-input",
+        );
+        if (input) {
+            input.value = name;
+        }
     }
 }
