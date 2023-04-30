@@ -1,4 +1,5 @@
 import * as express from "express";
+import * as cors from "cors";
 import * as ws from "ws";
 import { v4 as genUuid } from "uuid";
 import {
@@ -10,10 +11,16 @@ import {
 
 const PORT = parseInt(process.env.SERVER_PORT || "") || 8090;
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
-console.log(HOST);
+const APP_URL = process.env.APP_URL || "localhost:8080";
 
-const expressServer = express();
 const wss = new ws.Server({ noServer: true });
+const expressServer = express();
+
+expressServer.use(
+    cors({
+        origin: APP_URL,
+    }),
+);
 
 interface State {
     clients: Map<string, Client>;
