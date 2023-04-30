@@ -62,13 +62,16 @@ function main() {
     setupSocket();
 
     for (const notif of ["error", "warning", "success", "info"] as const) {
-        addNotification(notif, `This is a ${notif} notification.`);
+        addNotification(notif, `This is a ${notif} notification.`, {
+            timeoutMs: 500,
+        });
     }
 }
 
 function addNotification(
     type: "error" | "warning" | "success" | "info",
     message: string,
+    { timeoutMs }: { timeoutMs?: number } = {},
 ) {
     const notifsEl = document.querySelector(".notifications");
     if (!notifsEl) {
@@ -86,6 +89,10 @@ function addNotification(
 
     notifEl.appendChild(closeEl);
     notifsEl.appendChild(notifEl);
+
+    if (timeoutMs) {
+        setTimeout(() => notifEl.remove(), timeoutMs);
+    }
 }
 
 function setupSocket() {
@@ -93,14 +100,22 @@ function setupSocket() {
 
     ws.addEventListener("open", (e) => {
         console.log("Connected to server");
+        addNotification("success", "Connected to server", { timeoutMs: 2000 });
     });
 
     ws.addEventListener("error", (e) => {
         console.error("Error connecting to server");
+        addNotification("error", "Error connecting to server");
+        ws.close();
     });
 
     ws.addEventListener("close", (e) => {
         console.log(`Disconnected from server: ${e.code} ${e.reason}`);
+        addNotification(
+            "warning",
+            `Disconnected from server: ${e.code} ${e.reason}`,
+        );
+        ws.close();
     });
 }
 
