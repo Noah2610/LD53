@@ -5,37 +5,23 @@ export interface System {
     update?(): void;
 }
 
-// class UpdateElementPositions implements System {
-//     public update() {
-//         for (const { position, sprite } of STATE.query({
-//             with: ["position", "sprite"],
-//         })) {
-//             this.setElementPosition(sprite.el, position);
-//         }
-//     }
-
-//     private setElementPosition(el: HTMLElement, pos: Position) {
-//         el.style.left = `${pos.x}px`;
-//         el.style.top = `${pos.y}px`;
-//     }
-// }
-
-export function setupSystems() {
-    function updateActions() {
-        for (const [action, state] of STATE.actions.entries()) {
-            switch (state) {
-                case "down": {
-                    STATE.actions.set(action, "press");
-                    break;
-                }
-                case "up": {
-                    STATE.actions.delete(action);
-                }
-            }
+class UpdateElementPositions implements System {
+    public update() {
+        for (const { position, sprite } of STATE.query({
+            with: ["position", "sprite"],
+        })) {
+            this.setElementPosition(sprite.el, position);
         }
     }
 
-    function handleControls() {
+    private setElementPosition(el: HTMLElement, pos: Position) {
+        el.style.left = `${pos.x}px`;
+        el.style.top = `${pos.y}px`;
+    }
+}
+
+class HandleControls implements System {
+    public update() {
         for (const { player, position } of STATE.query({
             with: ["player", "position"],
         })) {
@@ -60,21 +46,31 @@ export function setupSystems() {
             }
         }
     }
+}
 
-    function updateElementPositions() {
-        function setElementPosition(el: HTMLElement, pos: Position) {
-            el.style.left = `${pos.x}px`;
-            el.style.top = `${pos.y}px`;
-        }
-
-        for (const { position, sprite } of STATE.query({
-            with: ["position", "sprite"],
-        })) {
-            setElementPosition(sprite.el, position);
+class UpdateActions implements System {
+    public update() {
+        for (const [action, state] of STATE.actions.entries()) {
+            switch (state) {
+                case "down": {
+                    STATE.actions.set(action, "press");
+                    break;
+                }
+                case "up": {
+                    STATE.actions.delete(action);
+                }
+            }
         }
     }
+}
 
-    const SYSTEMS = [handleControls, updateElementPositions, updateActions];
+export function setupSystems() {
+    const SYSTEMS: System[] = [
+        new HandleControls(),
+        new UpdateElementPositions(),
+        new UpdateActions(),
+    ];
 
-    setInterval(() => SYSTEMS.forEach((sys) => sys()), 1);
+    // TODO
+    setInterval(() => SYSTEMS.forEach((sys) => sys.update && sys.update()), 1);
 }
