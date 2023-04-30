@@ -1,0 +1,15 @@
+{
+    "name": "ld53-lib",
+    "version": "0.0.0",
+    "type": "commonjs",
+    "scripts": {
+        "build": "tsc",
+        "dev": "yarn run build && tsc -w",
+        "prebuild": "rm -rf dist/",
+        "postbuild": "cp package.json dist/package.json"
+    },
+    "devDependencies": {
+        "@types/node": "^18.16.3",
+        "typescript": "^5.0.4"
+    }
+}
