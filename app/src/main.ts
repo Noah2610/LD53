@@ -1,17 +1,53 @@
 import { ActionName, CONTROLS } from "./config";
-import { sendMessage, setupSocket } from "./connection";
+import { setupSocket } from "./connection";
 import { setupPlayer } from "./entities";
 import { STATE } from "./state";
 import { setupSystems } from "./systems";
 import "./style.css";
 
 async function main() {
-    setupPlayer();
     setupControls();
     setupSystems();
 
-    await setupSocket();
-    sendMessage({ type: "ping" });
+    // TODO:
+    // this player <-> socket sync doesn't belong here...
+    await setupSocket({
+        onConnected: (conn) => {
+            conn.send({ type: "ping" });
+        },
+
+        onAuthed: (conn) => {
+            if (!conn.clientId) {
+                throw new Error("Expected Conn to have clientId");
+            }
+
+            const entity = setupPlayer({ id: conn.clientId, isYou: true });
+
+            const player = entity.get("player");
+            const position = entity.get("position");
+
+            if (!player || !position) {
+                throw new Error(
+                    "Expected player to have player and position components",
+                );
+            }
+
+            conn.sendAuthed({
+                type: "join",
+                payload: {
+                    id: player.id,
+                    position: {
+                        x: position.x,
+                        y: position.y,
+                    },
+                },
+            });
+        },
+
+        onDisconnected: (conn) => {
+            conn.sendAuthed({ type: "leave" });
+        },
+    });
 }
 
 function setupControls() {

@@ -1,4 +1,4 @@
-export interface BaseComponent {
+interface BaseComponent {
     name: string;
 }
 
@@ -19,5 +19,7 @@ export interface Sprite {
 
 export interface Player {
     name: "player";
+    isYou: boolean;
+    id: string;
     speed: number;
 }

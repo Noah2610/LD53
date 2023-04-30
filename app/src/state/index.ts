@@ -1,5 +1,6 @@
 import { Component, ComponentName, ComponentOfName } from "../components";
 import { ActionName } from "../config";
+import { Conn } from "../connection";
 import { Entity, EntityId } from "../entities";
 import { query, QueryOptions } from "../query";
 import { genUuid } from "../util";
@@ -7,21 +8,21 @@ import { ComponentStores } from "./componentStore";
 
 export interface StateEntityApi {
     get: <N extends ComponentName>(name: N) => ComponentOfName<N> | null;
-    add: (...components: Component[]) => void;
-    remove: (...componentNames: ComponentName[]) => void;
+    add: (...components: Component[]) => Entity;
+    remove: (...componentNames: ComponentName[]) => Entity;
     destroy: () => void;
 }
 
 export class State {
     public actions: Map<ActionName, "down" | "press" | "up">;
-    public ws: WebSocket | null;
+    public conn: Conn | null;
 
     private entities: Map<EntityId, Entity>;
     private stores: ComponentStores;
 
     constructor() {
         this.actions = new Map();
-        this.ws = null;
+        this.conn = null;
 
         this.entities = new Map();
         this.stores = new ComponentStores();
@@ -30,10 +31,14 @@ export class State {
     public createEntity(id?: EntityId): Entity {
         const api: StateEntityApi = {
             get: (name) => this.stores.getComponentFromEntity(entity, name),
-            add: (...components: Component[]) =>
-                this.stores.addComponentsToEntity(entity, components),
-            remove: (...names: ComponentName[]) =>
-                this.stores.removeComponentsFromEntity(entity, names),
+            add: (...components: Component[]) => {
+                this.stores.addComponentsToEntity(entity, components);
+                return entity;
+            },
+            remove: (...names: ComponentName[]) => {
+                this.stores.removeComponentsFromEntity(entity, names);
+                return entity;
+            },
             destroy: () => this.destroyEntity(entity),
         };
 

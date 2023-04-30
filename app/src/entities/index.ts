@@ -24,7 +24,13 @@ export class Entity implements StateEntityApi {
     }
 }
 
-export function setupPlayer() {
+export function setupPlayer({
+    id,
+    isYou,
+}: {
+    id: string;
+    isYou: boolean;
+}): Entity {
     // TODO
     const el = document.querySelector<HTMLElement>(".player.entity")!;
 
@@ -32,8 +38,8 @@ export function setupPlayer() {
         throw new Error("Expected .player element");
     }
 
-    STATE.createEntity("player").add(
-        { name: "player", speed: 2 },
+    return STATE.createEntity("player").add(
+        { name: "player", isYou, id: null, speed: 2 },
         { name: "sprite", el },
         { name: "position", x: 0, y: 0 },
     );
