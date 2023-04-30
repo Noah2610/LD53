@@ -7,5 +7,4 @@ export const CONTROLS = {
 
 export type ActionName = keyof typeof CONTROLS;
 
-// TODO: .env
-export const SERVER_URL = "0.0.0.0:8090";
+export const SERVER_URL = (import.meta as any).env.VITE_SERVER_URL;

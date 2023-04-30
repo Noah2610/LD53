@@ -8,8 +8,9 @@ import {
     Unauthed,
 } from "ld53-lib/types";
 
-const PORT = 8090;
-const HOST = "0.0.0.0";
+const PORT = parseInt(process.env.SERVER_PORT || "") || 8090;
+const HOST = process.env.SERVER_HOST || "0.0.0.0";
+console.log(HOST);
 
 const expressServer = express();
 const wss = new ws.Server({ noServer: true });
