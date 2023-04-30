@@ -21,7 +21,11 @@ async function main() {
                 throw new Error("Expected Conn to have clientId");
             }
 
-            const entity = setupPlayer({ id: conn.clientId, isYou: true });
+            const entity = setupPlayer({
+                id: conn.clientId,
+                isYou: true,
+                position: { x: 100, y: 100 },
+            });
 
             const player = entity.get("player");
             const position = entity.get("position");

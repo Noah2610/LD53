@@ -23,17 +23,23 @@ export interface ServerMessageAuth {
 
 export interface ServerMessagePlayerJoin extends AuthedMessage {
     type: "playerJoin";
-    payload: PlayerInfo[];
+    payload: {
+        id: string;
+        position: { x: number; y: number };
+    }[];
 }
 
 export interface ServerMessagePlayerLeave extends AuthedMessage {
     type: "playerLeave";
-    payload: Omit<PlayerInfo, "position">[];
+    payload: { id: string }[];
 }
 
 export interface ServerMessagePlayerPosition extends AuthedMessage {
     type: "playerPosition";
-    payload: PlayerInfo[];
+    payload: {
+        id: string;
+        position: { x: number; y: number };
+    }[];
 }
 
 export type ServerMessage = BaseMessage &
@@ -53,7 +59,10 @@ export interface ClientMessagePing {
 
 export interface ClientMessageJoin extends AuthedMessage {
     type: "join";
-    payload: PlayerInfo;
+    payload: {
+        id: string;
+        position: { x: number; y: number };
+    };
 }
 
 export interface ClientMessageLeave extends AuthedMessage {
@@ -62,7 +71,10 @@ export interface ClientMessageLeave extends AuthedMessage {
 
 export interface ClientMessagePlayerPosition extends AuthedMessage {
     type: "playerPosition";
-    payload: PlayerInfo;
+    payload: {
+        id: string;
+        position: { x: number; y: number };
+    };
 }
 
 export type ClientMessage = BaseMessage &
@@ -72,13 +84,3 @@ export type ClientMessage = BaseMessage &
         | ClientMessageLeave
         | ClientMessagePlayerPosition
     );
-
-// ----------------------------------------
-
-export interface PlayerInfo {
-    id: string;
-    position: {
-        x: number;
-        y: number;
-    };
-}

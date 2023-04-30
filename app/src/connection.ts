@@ -192,6 +192,7 @@ export class Conn {
             setupPlayer({
                 id: payload.id,
                 isYou: false,
+                position: payload.position,
             });
         }
     }

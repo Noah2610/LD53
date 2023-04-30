@@ -27,9 +27,11 @@ export class Entity implements StateEntityApi {
 export function setupPlayer({
     id,
     isYou,
+    position,
 }: {
     id: string;
     isYou: boolean;
+    position: { x: number; y: number };
 }): Entity {
     // TODO move to Sprite component
     const el = document.createElement("div");
@@ -39,7 +41,7 @@ export function setupPlayer({
     return STATE.createEntity(`player-${id}`).add(
         { name: "player", isYou, id, speed: 2 },
         { name: "sprite", el },
-        { name: "position", x: 0, y: 0 },
+        { name: "position", x: position.x, y: position.y },
     );
 }
 

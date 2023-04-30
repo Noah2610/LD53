@@ -1,4 +1,9 @@
-import { PlayerInfo, ServerMessage, Unauthed } from "ld53-lib/types";
+import {
+    ClientMessageJoin,
+    ClientMessagePlayerPosition,
+    ServerMessage,
+    Unauthed,
+} from "ld53-lib/types";
 import * as ws from "ws";
 import { Player } from "./player";
 import { STATE } from "./state";
@@ -43,12 +48,13 @@ export class Client {
         return this.auth === auth;
     }
 
-    public join(info: PlayerInfo) {
-        this.player = new Player(info);
+    public join(info: ClientMessageJoin["payload"]) {
+        this.player = new Player(info.id);
+        this.player.setPosition(info.position);
 
         const playerJoinedPayload = [...STATE.clients.values()]
             .filter((c) => c.player && c.id !== this.id)
-            .map<PlayerInfo>((c) => ({
+            .map<ClientMessageJoin["payload"]>((c) => ({
                 id: c.id,
                 position: c.player!.position,
             }));
@@ -81,6 +87,26 @@ export class Client {
             {
                 type: "playerLeave",
                 payload: [{ id: this.id }],
+            },
+            this,
+        );
+    }
+
+    public setPlayerPosition(payload: ClientMessagePlayerPosition["payload"]) {
+        this.player?.setPosition(payload.position);
+
+        STATE.server.broadcast(
+            {
+                type: "playerPosition",
+                payload: [
+                    {
+                        id: this.id,
+                        position: {
+                            x: payload.position.x,
+                            y: payload.position.y,
+                        },
+                    },
+                ],
             },
             this,
         );

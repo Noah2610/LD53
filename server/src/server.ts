@@ -22,7 +22,7 @@ export class Server {
             }),
         );
 
-        this.wss.on("connection", this.onConnection);
+        this.wss.on("connection", this.onConnection.bind(this));
 
         const server = this.express.listen(PORT, HOST, () => {
             console.log(`Server listening on ${HOST}:${PORT}`);
@@ -104,21 +104,7 @@ export class Server {
                 break;
             }
             case "playerPosition": {
-                this.broadcast(
-                    {
-                        type: "playerPosition",
-                        payload: [
-                            {
-                                id: client.id,
-                                position: {
-                                    x: message.payload.position.x,
-                                    y: message.payload.position.y,
-                                },
-                            },
-                        ],
-                    },
-                    client,
-                );
+                client.setPlayerPosition(message.payload);
                 break;
             }
             default: {
