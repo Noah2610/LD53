@@ -1,5 +1,4 @@
-import { ComponentName, ComponentOfName, Position } from "../components";
-import { Entity } from "../entities";
+import { Position } from "../components";
 import { STATE } from "../state";
 
 export function setupSystems() {
@@ -10,8 +9,8 @@ export function setupSystems() {
         }
 
         for (const entity of STATE.entities) {
-            const sprite = findEntityComponent(entity, "sprite");
-            const position = findEntityComponent(entity, "position");
+            const sprite = entity.getComponent("sprite");
+            const position = entity.getComponent("position");
 
             if (sprite && position) {
                 setElementPosition(sprite.el, position);
@@ -35,8 +34,8 @@ export function setupSystems() {
 
     function handleControls() {
         for (const entity of STATE.entities) {
-            const player = findEntityComponent(entity, "player");
-            const position = findEntityComponent(entity, "position");
+            const player = entity.getComponent("player");
+            const position = entity.getComponent("position");
 
             if (!player || !position) {
                 continue;
@@ -67,16 +66,4 @@ export function setupSystems() {
     const SYSTEMS = [handleControls, updateElementPositions, updateActions];
 
     setInterval(() => SYSTEMS.forEach((sys) => sys()), 1);
-}
-
-// TODO: Refactor to method of Entity
-function findEntityComponent<N extends ComponentName>(
-    entity: Entity,
-    name: N,
-): ComponentOfName<N> | null {
-    return (
-        (entity.components.find(
-            (c) => c.name === name,
-        ) as ComponentOfName<N> | null) ?? null
-    );
 }
