@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Builds and runs all packages.
+
+set -e
+
+REPO_ROOT="$( cd "$( dirname "$( realpath "$0" )" )/.." && pwd )"
+
+source "${REPO_ROOT}/bin/share.sh"
+
+avail "yarn"
+
+function cleanup {
+    kill_processes "$$"
+}
+
+trap cleanup EXIT
+
+function build_pkg {
+    msg "BUILDING\n  $1"
+    pushd "./$1"
+    yarn build
+    popd
+    msg "Done building\n  $1"
+}
+
+function run_pkg {
+    msg "RUNNING\n  $1"
+    pushd "./$1"
+    if yarn start; then
+        msg "Finished\n  $1"
+    else
+        msg "Failed\n  $1"
+        exit 1
+    fi
+    popd
+}
+
+build_pkg "lib"
+build_pkg "server"
+build_pkg "app"
+
+run_pkg "server" & run_pkg "app"

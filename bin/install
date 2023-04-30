@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Installs dependencies and links lib package.
+
+set -e
+
+REPO_ROOT="$( cd "$( dirname "$( realpath "$0" )" )/.." && pwd )"
+LIB_NAME="ld53-lib"
+
+source "${REPO_ROOT}/bin/share.sh"
+
+avail "yarn"
+
+# lib
+msg "Installing LIB package..."
+pushd ./lib
+yarn install
+yarn build
+cd dist/
+yarn link
+popd
+
+# server
+msg "Installing SERVER package..."
+pushd ./server
+yarn install
+yarn link "$LIB_NAME"
+yarn build
+popd
+
+# app
+msg "Installing APP package..."
+pushd ./app
+yarn install
+yarn link "$LIB_NAME"
+yarn build
+popd
+
+msg "Done"
