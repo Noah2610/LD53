@@ -5,9 +5,9 @@ export class Sprite implements BaseComponent {
     public readonly name: "sprite";
 
     public size: Vector;
+    public el: HTMLElement;
 
     private src: string;
-    private el: HTMLElement;
     // TODO move to separate Label component
     private label: string | null;
     private labelEl: HTMLElement | null;

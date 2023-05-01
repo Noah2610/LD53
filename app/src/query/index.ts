@@ -1,9 +1,8 @@
 import { ComponentName, ComponentOfName } from "../components";
-import { Entity, EntityId } from "../entities";
+import { Entity } from "../entities";
 import { ComponentStores } from "../state/componentStore";
 
 type CN = ComponentName | never;
-type CofN<N extends CN> = N extends ComponentName ? ComponentOfName<N> : never;
 
 export interface QueryOptions<
     W extends CN = never,
