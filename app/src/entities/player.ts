@@ -29,13 +29,9 @@ export function setupPlayer({
     const size = { x: 11, y: 32 };
     const swordSize = { x: 7, y: 28 };
 
-    for (const key in size) {
-        // @ts-ignore
-        size[key] *= scale;
-    }
-    for (const key in swordSize) {
-        // @ts-ignore
-        swordSize[key] *= scale;
+    for (const s of [size, swordSize]) {
+        s.x *= scale;
+        s.y *= scale;
     }
 
     const player = STATE.createEntity(`player-${id}`).add(
@@ -43,6 +39,7 @@ export function setupPlayer({
         new Sprite({
             src: "/sprites/player.png",
             size: size,
+            classNames: ["player"],
             // label: playerName,
         }),
         new Position({ ...position }),
@@ -52,6 +49,7 @@ export function setupPlayer({
         new Sprite({
             src: "/sprites/sword.png",
             size: { ...swordSize },
+            classNames: ["player-sword"],
         }),
         new Position({ x: size.x, y: size.y / 2 - swordSize.y / 2 - 8 }),
         new Parent(player.id),

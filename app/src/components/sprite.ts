@@ -16,15 +16,18 @@ export class Sprite implements BaseComponent {
         src,
         size,
         label,
+        classNames,
     }: {
         src: string;
         size: Vector;
         label?: string;
+        classNames?: string[];
     }) {
         this.name = "sprite";
         this.size = size;
         this.src = src;
         this.el = document.createElement("div");
+        classNames && this.el.classList.add(...classNames);
         this.label = label ?? null;
         this.labelEl = null;
     }

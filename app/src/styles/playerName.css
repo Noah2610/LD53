@@ -1,0 +1,21 @@
+.player-name-form {
+    position: relative;
+    max-width: var(--game-width);
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 2rem;
+}
+
+.player-name-form > input.player-name-input {
+    flex-grow: 1;
+    box-sizing: border-box;
+
+    font-size: inherit;
+}
+
+.player-name-form > button.player-name-submit {
+    font-size: inherit;
+}

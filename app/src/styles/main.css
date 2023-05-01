@@ -1,0 +1,17 @@
+:root {
+    --game-width: 1000px;
+    --game-height: 800px;
+}
+
+body {
+    margin: 0;
+    font-size: 20px;
+    font-family: monospace;
+}
+
+button {
+    font-size: 1rem;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    border: none;
+}

@@ -1,0 +1,64 @@
+#root {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#game {
+    position: relative;
+
+    width: var(--game-width);
+    height: var(--game-height);
+
+    background-color: #000000;
+}
+
+.game-entities {
+    position: static;
+}
+
+.entity {
+    --width: 64px;
+    --height: 64px;
+    --sprite-src: "url(/sprites/larry.png)";
+
+    position: absolute;
+
+    width: calc(var(--width));
+    height: calc(var(--height));
+
+    background-image: var(--sprite-src);
+
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* TODO */
+    image-rendering: pixelated;
+}
+
+.entity-label {
+    /* position: absolute; */
+    /* top: -0.5rem; */
+    /* transform: translateY(-100%); */
+
+    width: auto;
+    max-width: 128px;
+    height: auto;
+    padding: 0.2rem 0.5rem;
+
+    transform: translateX(-50%);
+
+    font-size: 1rem;
+    text-align: center;
+
+    background-color: #ffffff66;
+}
