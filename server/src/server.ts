@@ -112,6 +112,10 @@ export class Server {
                 client.setPlayerName(message.payload.name);
                 break;
             }
+            case "playerAttack": {
+                client.playerAttack();
+                break;
+            }
             default: {
                 console.error(`Unimplemented message type:`, message);
                 expectNever(message);

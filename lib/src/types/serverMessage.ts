@@ -41,6 +41,11 @@ export interface ServerMessagePlayerName extends AuthedMessage {
     }[];
 }
 
+export interface ServerMessagePlayerAttack extends AuthedMessage {
+    type: "playerAttack";
+    payload: { id: string };
+}
+
 export type ServerMessage = BaseMessage &
     (
         | ServerMessagePong
@@ -49,4 +54,5 @@ export type ServerMessage = BaseMessage &
         | ServerMessagePlayerLeave
         | ServerMessagePlayerPosition
         | ServerMessagePlayerName
+        | ServerMessagePlayerAttack
     );

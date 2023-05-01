@@ -159,10 +159,19 @@ export function doPlayerAttack(id: string) {
         swordSprite.el.removeEventListener("animationend", stopAttacking);
     };
 
-    player.isAttacking = true;
+    const startAttacking = () => {
+        player.isAttacking = true;
 
-    swordSprite.el.classList.add("player-sword-attacking");
-    swordSprite.el.addEventListener("animationend", stopAttacking);
+        swordSprite.el.classList.add("player-sword-attacking");
+        swordSprite.el.addEventListener("animationend", stopAttacking);
 
-    animationEndTimeout = setTimeout(stopAttacking, player.attackDelayMs);
+        animationEndTimeout = setTimeout(stopAttacking, player.attackDelayMs);
+
+        const isYou = STATE.conn?.clientId === id;
+        if (isYou) {
+            STATE.conn?.sendAuthed({ type: "playerAttack" });
+        }
+    };
+
+    startAttacking();
 }

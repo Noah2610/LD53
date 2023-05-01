@@ -1,6 +1,5 @@
 import {
     ClientMessageJoin,
-    ClientMessagePlayerPosition,
     ServerMessage,
     ServerMessagePlayerJoin,
     Unauthed,
@@ -137,6 +136,16 @@ export class Client {
                 ],
             },
             null,
+        );
+    }
+
+    public playerAttack() {
+        STATE.server.broadcast(
+            {
+                type: "playerAttack",
+                payload: { id: this.id },
+            },
+            this,
         );
     }
 }

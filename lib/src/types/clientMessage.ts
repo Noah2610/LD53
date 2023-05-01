@@ -31,6 +31,10 @@ export interface ClientMessagePlayerName extends AuthedMessage {
     };
 }
 
+export interface ClientMessagePlayerAttack extends AuthedMessage {
+    type: "playerAttack";
+}
+
 export type ClientMessage = BaseMessage &
     (
         | ClientMessagePing
@@ -38,4 +42,5 @@ export type ClientMessage = BaseMessage &
         | ClientMessageLeave
         | ClientMessagePlayerPosition
         | ClientMessagePlayerName
+        | ClientMessagePlayerAttack
     );

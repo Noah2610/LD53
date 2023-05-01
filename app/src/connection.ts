@@ -2,6 +2,7 @@ import {
     ClientMessage,
     ServerMessage,
     ServerMessageAuth,
+    ServerMessagePlayerAttack,
     ServerMessagePlayerJoin,
     ServerMessagePlayerLeave,
     ServerMessagePlayerName,
@@ -11,6 +12,7 @@ import {
 import { expectNever } from "ts-expect";
 import { SERVER_URL } from "./config";
 import {
+    doPlayerAttack,
     removePlayer,
     setPlayerName,
     setPlayerPosition,
@@ -182,6 +184,10 @@ export class Conn {
                 this.onPlayerName(message);
                 return;
             }
+            case "playerAttack": {
+                this.onPlayerAttack(message);
+                return;
+            }
             default: {
                 expectNever(message);
             }
@@ -244,6 +250,10 @@ export class Conn {
         for (const payload of message.payload) {
             setPlayerName(payload.id, payload.name);
         }
+    }
+
+    private onPlayerAttack(message: ServerMessagePlayerAttack) {
+        doPlayerAttack(message.payload.id);
     }
 }
 
