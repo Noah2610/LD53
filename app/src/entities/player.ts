@@ -10,6 +10,9 @@ import {
 } from "../components";
 import { STATE } from "../state";
 
+const getEntityIdFrom = (id: string) => `player-${id}`;
+const getPlayerFrom = (id: string) => STATE.getEntity(getEntityIdFrom(id));
+
 export function setupPlayer({
     id,
     playerName,
@@ -34,7 +37,7 @@ export function setupPlayer({
         s.y *= scale;
     }
 
-    const player = STATE.createEntity(`player-${id}`).add(
+    const player = STATE.createEntity(getEntityIdFrom(id)).add(
         new Player({ isYou, id, playerName, speed: 2 }),
         new Sprite({
             src: "/sprites/player.png",
@@ -71,15 +74,14 @@ export function setupPlayer({
 
 // TODO
 export function removePlayer(playerId: string) {
-    for (const { entity, player } of STATE.query({
-        with: ["player"],
-    })) {
-        if (player.id !== playerId) {
-            continue;
-        }
+    const entity = getPlayerFrom(playerId);
+    const player = entity?.get("player");
 
-        entity.destroy();
+    if (!entity || !player) {
+        return;
     }
+
+    entity.destroy();
 }
 
 // TODO
@@ -87,16 +89,15 @@ export function setPlayerPosition(
     playerId: string,
     pos: { x: number; y: number },
 ) {
-    for (const { player, position } of STATE.query({
-        with: ["player", "position"],
-    })) {
-        if (player.id !== playerId) {
-            continue;
-        }
+    const entity = getPlayerFrom(playerId);
+    const position = entity?.get("position");
 
-        position.x = pos.x;
-        position.y = pos.y;
+    if (!entity || !position) {
+        return;
     }
+
+    position.x = pos.x;
+    position.y = pos.y;
 }
 
 // TODO

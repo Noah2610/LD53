@@ -16,6 +16,7 @@ export class HandleControls implements System {
             const down = STATE.actions.get("down");
             const left = STATE.actions.get("left");
             const right = STATE.actions.get("right");
+            const attack = STATE.actions.get("attack");
 
             const anyKey = up || down || left || right;
             if (!anyKey) {

@@ -1,6 +1,6 @@
 import "./styles";
 
-import { ActionName, CONTROLS } from "./config";
+import { ActionName, ACTIONS } from "./config";
 import { setupSocket } from "./connection";
 import { STATE } from "./state";
 import { setupSystems } from "./systems";
@@ -37,9 +37,9 @@ async function main() {
 
 function setupControls() {
     function onKeyDown(key: string) {
-        for (const a in CONTROLS) {
+        for (const a in ACTIONS) {
             const action = a as ActionName;
-            const keys = CONTROLS[action];
+            const keys = ACTIONS[action];
             if (keys.includes(key)) {
                 STATE.actions.set(action, "down");
             }
@@ -47,9 +47,9 @@ function setupControls() {
     }
 
     function onKeyUp(key: string) {
-        for (const a in CONTROLS) {
+        for (const a in ACTIONS) {
             const action = a as ActionName;
-            const keys = CONTROLS[action];
+            const keys = ACTIONS[action];
             if (keys.includes(key)) {
                 STATE.actions.set(action, "up");
             }
