@@ -8,6 +8,7 @@ import { ComponentStores } from "./componentStore";
 
 export interface StateEntityApi {
     get: <N extends ComponentName>(name: N) => ComponentOfName<N> | null;
+    getComponents: () => Component[];
     add: (...components: Component[]) => Entity;
     remove: (...componentNames: ComponentName[]) => Entity;
     destroy: () => void;
@@ -31,14 +32,24 @@ export class State {
     public createEntity(id?: EntityId): Entity {
         const api: StateEntityApi = {
             get: (name) => this.stores.getComponentFromEntity(entity, name),
+
+            getComponents: () => this.stores.getComponentsFromEntity(entity),
+
             add: (...components: Component[]) => {
                 this.stores.addComponentsToEntity(entity, components);
+                for (const comp of components) {
+                    if (comp.onCreate) {
+                        comp.onCreate();
+                    }
+                }
                 return entity;
             },
+
             remove: (...names: ComponentName[]) => {
                 this.stores.removeComponentsFromEntity(entity, names);
                 return entity;
             },
+
             destroy: () => this.destroyEntity(entity),
         };
 
@@ -56,22 +67,9 @@ export class State {
         yield* query(q, [...this.entities.values()], this.stores);
     }
 
-    // private dev() {
-    //     for (const x of this.query({
-    //         with: ["position"],
-    //         without: ["player"],
-    //         maybe: ["sprite"],
-    //     })) {
-    //         x;
-    //     }
-    // }
-
     private destroyEntity(entity: Entity) {
+        this.stores.removeAllComponentsFromEntity(entity);
         this.entities.delete(entity.id);
-
-        for (const store of this.stores.iter()) {
-            store.delete(entity.id);
-        }
     }
 }
 

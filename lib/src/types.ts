@@ -26,7 +26,7 @@ export interface ServerMessagePlayerJoin extends AuthedMessage {
     payload: {
         id: string;
         name: string;
-        position: { x: number; y: number };
+        position: Vector;
     }[];
 }
 
@@ -39,7 +39,7 @@ export interface ServerMessagePlayerPosition extends AuthedMessage {
     type: "playerPosition";
     payload: {
         id: string;
-        position: { x: number; y: number };
+        position: Vector;
     }[];
 }
 
@@ -71,7 +71,7 @@ export interface ClientMessageJoin extends AuthedMessage {
     type: "join";
     payload: {
         name?: string;
-        position: { x: number; y: number };
+        position: Vector;
     };
 }
 
@@ -82,7 +82,7 @@ export interface ClientMessageLeave extends AuthedMessage {
 export interface ClientMessagePlayerPosition extends AuthedMessage {
     type: "playerPosition";
     payload: {
-        position: { x: number; y: number };
+        position: Vector;
     };
 }
 
@@ -101,3 +101,10 @@ export type ClientMessage = BaseMessage &
         | ClientMessagePlayerPosition
         | ClientMessagePlayerName
     );
+
+// ----------------------------------------
+
+export interface Vector {
+    x: number;
+    y: number;
+}

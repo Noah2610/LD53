@@ -1,6 +1,6 @@
 import { ActionName, CONTROLS } from "./config";
 import { setupSocket } from "./connection";
-import { setupPlayer } from "./entities";
+import { setupPlayer } from "./entities/player";
 import { STATE } from "./state";
 import { setupSystems } from "./systems";
 import "./style.css";

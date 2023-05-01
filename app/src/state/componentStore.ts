@@ -33,6 +33,20 @@ export class ComponentStores {
         return comp as ComponentOfName<N>;
     }
 
+    public getComponentsFromEntity(entity: Entity): Component[] {
+        const comps: Component[] = [];
+
+        for (const store of this.stores.values()) {
+            const comp = store.get(entity.id);
+            if (!comp) {
+                continue;
+            }
+            comps.push(comp);
+        }
+
+        return comps;
+    }
+
     public addComponentsToEntity(entity: Entity, components: Component[]) {
         for (const comp of components) {
             const store = this.get(comp.name);
@@ -44,6 +58,18 @@ export class ComponentStores {
         for (const name of names) {
             const store = this.get(name);
             store.delete(entity.id);
+        }
+    }
+
+    public removeAllComponentsFromEntity(entity: Entity) {
+        for (const store of this.iter()) {
+            const comp = store.get(entity.id);
+            if (comp) {
+                if (comp.onRemove) {
+                    comp.onRemove();
+                }
+                store.delete(entity.id);
+            }
         }
     }
 

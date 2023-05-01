@@ -15,7 +15,7 @@ import {
     setPlayerName,
     setPlayerPosition,
     setupPlayer,
-} from "./entities";
+} from "./entities/player";
 import { STATE } from "./state";
 import { addNotification } from "./ui";
 
@@ -121,10 +121,10 @@ export class Conn {
                     const json = JSON.parse(event.data);
                     this.onServerMessage(json);
                 } catch (err) {
-                    console.error("Error parsing server message", err);
+                    console.error("Error handling server message", err);
                     addNotification(
                         "error",
-                        `Error parsing server message: ${event.data}`,
+                        `Error handling server message: ${event.data}`,
                     );
                 }
             });

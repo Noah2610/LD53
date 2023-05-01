@@ -43,18 +43,14 @@ button {
     --width: 64px;
     --height: 64px;
     --sprite-scale: 2;
+    --sprite-src: "url(/sprites/larry.png)";
+
+    position: absolute;
 
     width: calc(var(--width) * var(--sprite-scale));
     height: calc(var(--height) * var(--sprite-scale));
 
-    position: absolute;
-}
-
-.player {
-    --width: 32px;
-    --height: 64px;
-
-    background-image: url("/sprites/larry.png");
+    background-image: var(--sprite-src);
 
     background-position: center;
     background-size: contain;
@@ -65,7 +61,7 @@ button {
     align-items: center;
 }
 
-.player > .player-name {
+.entity > .entity-label {
     position: absolute;
     padding: 0.2rem 0.5rem;
     top: -0.5rem;
