@@ -59,6 +59,7 @@ function setupControls() {
     document.addEventListener("keydown", (e) => {
         const target = e.target as HTMLElement;
         if (
+            e.repeat ||
             target.tagName === "INPUT" ||
             target.tagName === "TEXTAREA" ||
             target.tagName === "BUTTON"

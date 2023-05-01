@@ -5,9 +5,11 @@ import {
     Parent,
     Player,
     PlayerLabel,
+    PlayerSword,
     Position,
     Sprite,
 } from "../components";
+import { PLAYER_CONFIG } from "../config";
 import { STATE } from "../state";
 
 const getEntityIdFrom = (id: string) => `player-${id}`;
@@ -38,7 +40,12 @@ export function setupPlayer({
     }
 
     const player = STATE.createEntity(getEntityIdFrom(id)).add(
-        new Player({ isYou, id, playerName, speed: 2 }),
+        new Player({
+            isYou,
+            id,
+            playerName,
+            ...PLAYER_CONFIG,
+        }),
         new Sprite({
             src: "/sprites/player.png",
             size: size,
@@ -49,6 +56,7 @@ export function setupPlayer({
     );
 
     STATE.createEntity(`player-sword-${id}`).add(
+        new PlayerSword(id),
         new Sprite({
             src: "/sprites/sword.png",
             size: { ...swordSize },
@@ -125,4 +133,36 @@ function setPlayerNameInput(name: string) {
     if (input) {
         input.value = name;
     }
+}
+
+export function doPlayerAttack(id: string) {
+    const entity = getPlayerFrom(id);
+    const player = entity?.get("player");
+    const sword = STATE.getEntity(`player-sword-${id}`);
+    const swordSprite = sword?.get("sprite");
+
+    if (!swordSprite || !sword || !entity || !player || player.isAttacking) {
+        return;
+    }
+
+    let animationEndTimeout: number | null = null;
+
+    const stopAttacking = () => {
+        player.isAttacking = false;
+
+        if (animationEndTimeout !== null) {
+            clearTimeout(animationEndTimeout);
+            animationEndTimeout = null;
+        }
+
+        swordSprite.el.classList.remove("player-sword-attacking");
+        swordSprite.el.removeEventListener("animationend", stopAttacking);
+    };
+
+    player.isAttacking = true;
+
+    swordSprite.el.classList.add("player-sword-attacking");
+    swordSprite.el.addEventListener("animationend", stopAttacking);
+
+    animationEndTimeout = setTimeout(stopAttacking, player.attackDelayMs);
 }

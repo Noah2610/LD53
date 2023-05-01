@@ -1,5 +1,5 @@
 export interface BaseComponent {
-    name: string;
+    readonly name: string;
 
     onCreate?(): void;
     onRemove?(): void;

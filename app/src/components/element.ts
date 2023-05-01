@@ -1,11 +1,10 @@
 import { BaseComponent } from "./_baseComponent";
 
 export class Element implements BaseComponent {
-    public name: "element";
+    public readonly name = "element";
     public element: HTMLElement;
 
     constructor(element: HTMLElement) {
-        this.name = "element";
         this.element = element;
     }
 

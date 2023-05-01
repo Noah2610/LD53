@@ -2,7 +2,7 @@ import { Vector } from "ld53-lib/types";
 import { BaseComponent } from "./_baseComponent";
 
 export class Sprite implements BaseComponent {
-    public readonly name: "sprite";
+    public readonly name = "sprite";
 
     public size: Vector;
     public el: HTMLElement;
@@ -23,7 +23,6 @@ export class Sprite implements BaseComponent {
         label?: string;
         classNames?: string[];
     }) {
-        this.name = "sprite";
         this.size = size;
         this.src = src;
         this.el = document.createElement("div");

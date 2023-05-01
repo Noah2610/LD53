@@ -11,3 +11,8 @@ export type ActionName = keyof typeof ACTIONS;
 
 export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const FPS = 60;
+
+export const PLAYER_CONFIG = {
+    speed: 2,
+    attackDelayMs: 1000,
+};
