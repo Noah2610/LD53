@@ -117,16 +117,20 @@ export class Conn {
             });
 
             this.ws.addEventListener("message", (event) => {
+                let json;
+
                 try {
-                    const json = JSON.parse(event.data);
-                    this.onServerMessage(json);
+                    json = JSON.parse(event.data);
                 } catch (err) {
-                    console.error("Error handling server message", err);
+                    console.error("Error parsing server message", err);
                     addNotification(
                         "error",
-                        `Error handling server message: ${event.data}`,
+                        `Error parsing server message: ${event.data}`,
                     );
+                    return;
                 }
+
+                this.onServerMessage(json);
             });
         });
     }

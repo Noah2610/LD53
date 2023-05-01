@@ -1,4 +1,5 @@
-import { Position } from "../components";
+import { Vector } from "ld53-lib/types";
+import { Parent, Position } from "../components";
 import { STATE } from "../state";
 
 export interface System {
@@ -7,14 +8,45 @@ export interface System {
 
 class UpdateElementPositions implements System {
     public update() {
-        for (const { position, sprite } of STATE.query({
+        for (const { position, sprite, parent } of STATE.query({
             with: ["position", "sprite"],
+            maybe: ["parent"],
         })) {
-            this.setElementPosition(sprite.el, position);
+            this.handlePosition({ position, el: sprite.el, parent });
+        }
+
+        for (const { position, element, parent } of STATE.query({
+            with: ["position", "element"],
+            maybe: ["parent"],
+            without: ["sprite"],
+        })) {
+            this.handlePosition({ position, el: element.element, parent });
         }
     }
 
-    private setElementPosition(el: HTMLElement, pos: Position) {
+    private handlePosition({
+        position,
+        el,
+        parent,
+    }: {
+        position: Position;
+        el: HTMLElement;
+        parent?: Parent;
+    }) {
+        const pos = { x: position.x, y: position.y };
+
+        if (parent) {
+            const parentPos = STATE.getComponentOf(parent.parentId, "position");
+            if (parentPos) {
+                pos.x += parentPos.x;
+                pos.y += parentPos.y;
+            }
+        }
+
+        this.setElementPosition(el, pos);
+    }
+
+    private setElementPosition(el: HTMLElement, pos: Vector) {
         el.style.left = `${pos.x}px`;
         el.style.top = `${pos.y}px`;
     }
@@ -83,11 +115,28 @@ class UpdateActions implements System {
     }
 }
 
+class HandleParentDestroy implements System {
+    public update() {
+        for (const { entity, parent } of STATE.query({
+            with: ["parent"],
+            maybe: ["playerLabel"],
+        })) {
+            const parentEntity = STATE.getEntity(parent.parentId);
+            if (parentEntity && parentEntity.isAlive) {
+                continue;
+            }
+
+            entity.destroy();
+        }
+    }
+}
+
 export function setupSystems() {
     const SYSTEMS: System[] = [
         new HandleControls(),
         new UpdateElementPositions(),
         new UpdateActions(),
+        new HandleParentDestroy(),
     ];
 
     // TODO

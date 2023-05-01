@@ -1,5 +1,13 @@
+import { Vector } from "ld53-lib/types";
 import { Entity } from ".";
-import { Player, Position, Sprite } from "../components";
+import {
+    Element,
+    Parent,
+    Player,
+    PlayerLabel,
+    Position,
+    Sprite,
+} from "../components";
 import { STATE } from "../state";
 
 export function setupPlayer({
@@ -11,21 +19,36 @@ export function setupPlayer({
     id: string;
     playerName: string;
     isYou: boolean;
-    position: { x: number; y: number };
+    position: Vector;
 }): Entity {
     if (isYou) {
         setPlayerNameInput(playerName);
     }
 
-    return STATE.createEntity(`player-${id}`).add(
+    const size = { x: 64, y: 128 };
+
+    const player = STATE.createEntity(`player-${id}`).add(
         new Player({ isYou, id, playerName, speed: 2 }),
         new Sprite({
             src: "/sprites/larry.png",
-            size: { x: 32, y: 64 },
-            label: playerName,
+            size: size,
+            // label: playerName,
         }),
-        new Position({ x: position.x, y: position.y }),
+        new Position({ ...position }),
     );
+
+    const labelEl = document.createElement("div");
+    labelEl.classList.add("entity-label");
+    labelEl.innerText = playerName;
+
+    STATE.createEntity(`player-label-${id}`).add(
+        new Element(labelEl),
+        new Position({ x: size.x / 2, y: size.y + 12 }),
+        new Parent(player.id),
+        new PlayerLabel({ playerId: id, isYou }),
+    );
+
+    return player;
 }
 
 // TODO
@@ -60,17 +83,17 @@ export function setPlayerPosition(
 
 // TODO
 export function setPlayerName(playerId: string, name: string) {
-    for (const { player, sprite } of STATE.query({
-        with: ["player", "sprite"],
+    for (const { playerLabel, element } of STATE.query({
+        with: ["playerLabel", "element"],
     })) {
-        if (player.id !== playerId) {
+        if (playerLabel.playerId !== playerId) {
             continue;
         }
 
-        player.playerName = name;
-        sprite.setLabel(name);
+        element.element.innerText = name;
+        // sprite.setLabel(name);
 
-        if (player.isYou) {
+        if (playerLabel.isYou) {
             setPlayerNameInput(name);
         }
     }

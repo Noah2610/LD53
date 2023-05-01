@@ -68,8 +68,17 @@ export class State {
     }
 
     private destroyEntity(entity: Entity) {
+        entity.isAlive = false;
         this.stores.removeAllComponentsFromEntity(entity);
         this.entities.delete(entity.id);
+    }
+
+    public getComponentOf<N extends ComponentName>(id: EntityId, name: N) {
+        return this.stores.get(name).get(id) ?? null;
+    }
+
+    public getEntity(id: EntityId) {
+        return this.entities.get(id) ?? null;
     }
 }
 

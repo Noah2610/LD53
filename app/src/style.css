@@ -42,13 +42,12 @@ button {
 .entity {
     --width: 64px;
     --height: 64px;
-    --sprite-scale: 2;
     --sprite-src: "url(/sprites/larry.png)";
 
     position: absolute;
 
-    width: calc(var(--width) * var(--sprite-scale));
-    height: calc(var(--height) * var(--sprite-scale));
+    width: calc(var(--width));
+    height: calc(var(--height));
 
     background-image: var(--sprite-src);
 
@@ -61,11 +60,17 @@ button {
     align-items: center;
 }
 
-.entity > .entity-label {
-    position: absolute;
+.entity-label {
+    /* position: absolute; */
+    /* top: -0.5rem; */
+    /* transform: translateY(-100%); */
+
+    width: auto;
+    max-width: 128px;
+    height: auto;
     padding: 0.2rem 0.5rem;
-    top: -0.5rem;
-    transform: translateY(-100%);
+
+    transform: translateX(-50%);
 
     font-size: 1rem;
     text-align: center;
