@@ -208,15 +208,17 @@ export class Conn {
 
     private onPlayerJoin(message: ServerMessagePlayerJoin) {
         for (const payload of message.payload) {
-            if (payload.id === this.clientId) {
-                continue;
-            }
+            // if (payload.id === this.clientId) {
+            //     continue;
+            // }
+
+            const isYou = payload.id === this.clientId;
 
             // TODO
             setupPlayer({
                 id: payload.id,
                 playerName: payload.name,
-                isYou: false,
+                isYou,
                 position: payload.position,
             });
         }

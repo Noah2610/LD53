@@ -56,20 +56,14 @@ export class Client {
             position: info.position,
         });
 
-        if (this.player.name !== info.name) {
-            this.sendAuthed({
-                type: "playerName",
-                payload: [{ id: this.id, name: this.player.name }],
-            });
-        }
-
         const playerJoinedPayload = [...STATE.clients.values()]
-            .filter((c) => c.player && c.id !== this.id)
+            .filter((c) => c.player)
             .map<ServerMessagePlayerJoin["payload"][number]>((c) => ({
                 id: c.id,
                 name: c.player!.name,
                 position: c.player!.position,
             }));
+
         if (playerJoinedPayload.length > 0) {
             this.sendAuthed({
                 type: "playerJoin",

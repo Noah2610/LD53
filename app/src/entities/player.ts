@@ -13,6 +13,10 @@ export function setupPlayer({
     isYou: boolean;
     position: { x: number; y: number };
 }): Entity {
+    if (isYou) {
+        setPlayerNameInput(playerName);
+    }
+
     return STATE.createEntity(`player-${id}`).add(
         new Player({ isYou, id, playerName, speed: 2 }),
         new Sprite({
@@ -67,12 +71,16 @@ export function setPlayerName(playerId: string, name: string) {
         sprite.setLabel(name);
 
         if (player.isYou) {
-            const input = document.querySelector<HTMLInputElement>(
-                "input.player-name-input",
-            );
-            if (input) {
-                input.value = name;
-            }
+            setPlayerNameInput(name);
         }
+    }
+}
+
+function setPlayerNameInput(name: string) {
+    const input = document.querySelector<HTMLInputElement>(
+        "input.player-name-input",
+    );
+    if (input) {
+        input.value = name;
     }
 }

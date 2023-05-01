@@ -18,32 +18,12 @@ async function main() {
         },
 
         onAuthed: (conn) => {
-            if (!conn.clientId) {
-                throw new Error("Expected Conn to have clientId");
-            }
-
-            const entity = setupPlayer({
-                id: conn.clientId,
-                playerName: "Player", // TODO
-                isYou: true,
-                position: { x: 100, y: 100 },
-            });
-
-            const player = entity.get("player");
-            const position = entity.get("position");
-
-            if (!player || !position) {
-                throw new Error(
-                    "Expected player to have player and position components",
-                );
-            }
-
             conn.sendAuthed({
                 type: "join",
                 payload: {
                     position: {
-                        x: position.x,
-                        y: position.y,
+                        x: 100,
+                        y: 100,
                     },
                 },
             });
