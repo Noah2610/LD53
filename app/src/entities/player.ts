@@ -25,16 +25,36 @@ export function setupPlayer({
         setPlayerNameInput(playerName);
     }
 
-    const size = { x: 64, y: 128 };
+    const scale = 2;
+    const size = { x: 11, y: 32 };
+    const swordSize = { x: 7, y: 28 };
+
+    for (const key in size) {
+        // @ts-ignore
+        size[key] *= scale;
+    }
+    for (const key in swordSize) {
+        // @ts-ignore
+        swordSize[key] *= scale;
+    }
 
     const player = STATE.createEntity(`player-${id}`).add(
         new Player({ isYou, id, playerName, speed: 2 }),
         new Sprite({
-            src: "/sprites/larry.png",
+            src: "/sprites/player.png",
             size: size,
             // label: playerName,
         }),
         new Position({ ...position }),
+    );
+
+    STATE.createEntity(`player-sword-${id}`).add(
+        new Sprite({
+            src: "/sprites/sword.png",
+            size: { ...swordSize },
+        }),
+        new Position({ x: size.x, y: size.y / 2 - swordSize.y / 2 - 8 }),
+        new Parent(player.id),
     );
 
     const labelEl = document.createElement("div");
