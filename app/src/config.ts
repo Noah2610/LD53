@@ -7,4 +7,5 @@ export const CONTROLS = {
 
 export type ActionName = keyof typeof CONTROLS;
 
-export const SERVER_URL = (import.meta as any).env.VITE_SERVER_URL;
+export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+export const FPS = 60;
