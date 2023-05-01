@@ -1,26 +1,11 @@
+import { Player, Position, Sprite } from "./_components";
+
 interface BaseComponent {
     name: string;
 }
 
-export type Component = BaseComponent & (Position | Sprite | Player);
+export type Component = BaseComponent & (Player | Position | Sprite);
 export type ComponentName = Component["name"];
 export type ComponentOfName<N extends ComponentName> = Component & { name: N };
 
-export interface Position {
-    name: "position";
-    x: number;
-    y: number;
-}
-
-export interface Sprite {
-    name: "sprite";
-    el: HTMLElement;
-}
-
-export interface Player {
-    name: "player";
-    isYou: boolean;
-    id: string;
-    playerName: string;
-    speed: number;
-}
+export * from "./_components";

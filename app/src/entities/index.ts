@@ -1,4 +1,11 @@
-import { Component, ComponentName, ComponentOfName } from "../components";
+import {
+    Component,
+    ComponentName,
+    ComponentOfName,
+    Player,
+    Position,
+    Sprite,
+} from "../components";
 import { State, STATE, StateEntityApi } from "../state";
 
 export type EntityId = string;
@@ -45,9 +52,9 @@ export function setupPlayer({
     document.querySelector(".game-entities")!.appendChild(el);
 
     return STATE.createEntity(`player-${id}`).add(
-        { name: "player", isYou, id, playerName, speed: 2 },
-        { name: "sprite", el },
-        { name: "position", x: position.x, y: position.y },
+        new Player({ isYou, id, playerName, speed: 2 }),
+        new Sprite({ el }),
+        new Position({ x: position.x, y: position.y }),
     );
 }
 
