@@ -90,8 +90,8 @@ export class Conn {
                 resolve(this);
             });
 
-            this.ws.addEventListener("error", () => {
-                console.error("Error connecting to server");
+            this.ws.addEventListener("error", (e) => {
+                console.error("Error connecting to server", e);
                 addNotification("error", "Error connecting to server");
                 // this.ws.close();
                 // this.auth = null;

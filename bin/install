@@ -11,6 +11,11 @@ source "${REPO_ROOT}/bin/share.sh"
 
 avail "yarn"
 
+cd "$REPO_ROOT"
+
+# dotenv
+[ -f "./.env" ] || cp "./example.env" "./.env"
+
 # lib
 msg "Installing LIB package..."
 pushd ./lib
