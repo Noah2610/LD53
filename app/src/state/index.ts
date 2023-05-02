@@ -1,3 +1,4 @@
+import { Vector } from "ld53-lib/types";
 import { Component, ComponentName, ComponentOfName } from "../components";
 import { ActionName } from "../config";
 import { Conn } from "../connection";
@@ -5,6 +6,7 @@ import { Entity, EntityId } from "../entities";
 import { query, QueryOptions } from "../query";
 import { genUuid } from "../util";
 import { ComponentStores } from "./componentStore";
+import { PlayerController } from "./playerController";
 
 export interface StateEntityApi {
     get: <N extends ComponentName>(name: N) => ComponentOfName<N> | null;
@@ -20,6 +22,7 @@ export class State {
 
     private entities: Map<EntityId, Entity>;
     private stores: ComponentStores;
+    private playerControllers: Map<string, PlayerController>;
 
     constructor() {
         this.actions = new Map();
@@ -27,6 +30,7 @@ export class State {
 
         this.entities = new Map();
         this.stores = new ComponentStores();
+        this.playerControllers = new Map();
     }
 
     public createEntity(id?: EntityId): Entity {
@@ -79,6 +83,43 @@ export class State {
 
     public getEntity(id: EntityId) {
         return this.entities.get(id) ?? null;
+    }
+
+    public createPlayer({
+        clientId,
+        playerName,
+        isYou,
+        position,
+    }: {
+        clientId: string;
+        playerName: string;
+        isYou: boolean;
+        position: Vector;
+    }) {
+        const player = new PlayerController({
+            clientId,
+            playerName,
+            isYou,
+            position,
+        });
+
+        this.playerControllers.set(clientId, player);
+
+        return this.getEntity(player.entityId)!;
+    }
+
+    public getPlayer(clientId: string): PlayerController | null {
+        return this.playerControllers.get(clientId) ?? null;
+    }
+
+    public removePlayer(clientId: string) {
+        const controller = this.getPlayer(clientId);
+        if (!controller) return;
+        const entity = this.getEntity(controller.entityId);
+        if (!entity) return;
+
+        this.destroyEntity(entity);
+        this.playerControllers.delete(clientId);
     }
 }
 

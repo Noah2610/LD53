@@ -1,5 +1,4 @@
 import { System } from ".";
-import { doPlayerAttack } from "../entities/player";
 import { STATE } from "../state";
 
 export class HandleControls implements System {
@@ -25,33 +24,30 @@ export class HandleControls implements System {
                 continue;
             }
 
+            const pos = { x: position.x, y: position.y };
+
             if (up) {
-                position.y -= STEP;
+                pos.y -= STEP;
             }
             if (down) {
-                position.y += STEP;
+                pos.y += STEP;
             }
             if (left) {
-                position.x -= STEP;
+                pos.x -= STEP;
             }
             if (right) {
-                position.x += STEP;
+                pos.x += STEP;
             }
+
+            const controller = STATE.getPlayer(player.id);
+            if (!controller) {
+                return;
+            }
+
+            controller.setPosition(pos);
 
             if (attack === "down") {
-                doPlayerAttack(player.id);
-            }
-
-            if (anyMove) {
-                STATE.conn?.sendAuthed({
-                    type: "playerPosition",
-                    payload: {
-                        position: {
-                            x: position.x,
-                            y: position.y,
-                        },
-                    },
-                });
+                controller.attack();
             }
         }
     }

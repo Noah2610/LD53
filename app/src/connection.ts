@@ -11,13 +11,7 @@ import {
 } from "ld53-lib/types";
 import { expectNever } from "ts-expect";
 import { SERVER_URL } from "./config";
-import {
-    doPlayerAttack,
-    removePlayer,
-    setPlayerName,
-    setPlayerPosition,
-    setupPlayer,
-} from "./entities/player";
+import { createPlayerEntity } from "./entities/player";
 import { STATE } from "./state";
 import { addNotification } from "./ui";
 
@@ -224,9 +218,8 @@ export class Conn {
 
             const isYou = payload.id === this.clientId;
 
-            // TODO
-            setupPlayer({
-                id: payload.id,
+            STATE.createPlayer({
+                clientId: payload.id,
                 playerName: payload.name,
                 isYou,
                 position: payload.position,
@@ -236,24 +229,24 @@ export class Conn {
 
     private onPlayerLeave(message: ServerMessagePlayerLeave) {
         for (const payload of message.payload) {
-            removePlayer(payload.id);
+            STATE.removePlayer(payload.id);
         }
     }
 
     private onPlayerPosition(message: ServerMessagePlayerPosition) {
         for (const payload of message.payload) {
-            setPlayerPosition(payload.id, payload.position);
+            STATE.getPlayer(payload.id)?.setPosition(payload.position);
         }
     }
 
     private onPlayerName(message: ServerMessagePlayerName) {
         for (const payload of message.payload) {
-            setPlayerName(payload.id, payload.name);
+            STATE.getPlayer(payload.id)?.setName(payload.name);
         }
     }
 
     private onPlayerAttack(message: ServerMessagePlayerAttack) {
-        doPlayerAttack(message.payload.id);
+        STATE.getPlayer(message.payload.id)?.attack();
     }
 }
 
