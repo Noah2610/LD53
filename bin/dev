@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+REPO_ROOT="$( cd "$( dirname "$( realpath "$0" )" )/.." && pwd )"
+source "${REPO_ROOT}/bin/share.sh"
+
+avail "tmux"
+avail "yarn"
+
+run_dev="yarn run dev"
+
+tmux new-session -s ld53 -d
+tmux new-window -t ld53:3 -n lib "sleep 1s && cd ./lib && $run_dev"
+tmux new-window -t ld53:2 -n server "cd ./server && $run_dev"
+tmux new-window -t ld53:1 -n app "cd ./app && $run_dev"
+tmux kill-window -t ld53:0
+
+tmux attach-session -t ld53
