@@ -73,7 +73,7 @@ export function createPlayerEntity({
 
     STATE.createEntity(`player-label-${clientId}`).add(
         new Element(labelEl),
-        new Position({ x: size.x / 2, y: size.y + 12 }),
+        new Position({ x: size.x / 2, y: 0 }),
         new Parent(player.id),
         new PlayerLabel({ playerId: clientId, isYou }),
     );
