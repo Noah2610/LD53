@@ -1,5 +1,8 @@
+import { Vector } from "ld53-lib/types";
+
 export class Player {
-    public position: { x: number; y: number };
+    public position: Vector;
+    public velocity: Vector;
     public name: string;
 
     private id: string;
@@ -7,20 +10,32 @@ export class Player {
     constructor({
         id,
         position,
+        velocity,
         name,
     }: {
         id: string;
-        position?: { x: number; y: number };
+        position?: Vector;
+        velocity?: Vector;
         name?: string;
     }) {
         this.id = id;
         this.name = name || genName();
         this.position = position || { x: 0, y: 0 };
+        this.velocity = velocity || { x: 0, y: 0 };
     }
 
-    public setPosition(position: { x: number; y: number }) {
-        this.position.x = position.x;
-        this.position.y = position.y;
+    public setPosition({ x, y }: Vector, velocity?: Vector) {
+        this.position.x = x;
+        this.position.y = y;
+
+        if (velocity) {
+            this.setVelocity(velocity);
+        }
+    }
+
+    public setVelocity({ x, y }: Vector) {
+        this.velocity.x = x;
+        this.velocity.y = y;
     }
 
     public setName(name: string) {

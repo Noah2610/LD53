@@ -7,11 +7,11 @@ import {
     ServerMessagePlayerLeave,
     ServerMessagePlayerName,
     ServerMessagePlayerPosition,
+    ServerMessagePlayerVelocity,
     Unauthed,
 } from "ld53-lib/types";
 import { expectNever } from "ts-expect";
 import { SERVER_URL } from "./config";
-import { createPlayerEntity } from "./entities/player";
 import { STATE } from "./state";
 import { addNotification } from "./ui";
 
@@ -182,6 +182,10 @@ export class Conn {
                 this.onPlayerAttack(message);
                 return;
             }
+            case "playerVelocity": {
+                this.onPlayerVelocity(message);
+                return;
+            }
             default: {
                 expectNever(message);
             }
@@ -236,6 +240,12 @@ export class Conn {
     private onPlayerPosition(message: ServerMessagePlayerPosition) {
         for (const payload of message.payload) {
             STATE.getPlayer(payload.id)?.setPosition(payload.position);
+        }
+    }
+
+    private onPlayerVelocity(message: ServerMessagePlayerVelocity) {
+        for (const payload of message.payload) {
+            STATE.getPlayer(payload.id)?.setVelocity(payload.velocity);
         }
     }
 

@@ -30,6 +30,15 @@ export interface ServerMessagePlayerPosition extends AuthedMessage {
     payload: {
         id: string;
         position: Vector;
+        velocity?: Vector;
+    }[];
+}
+
+export interface ServerMessagePlayerVelocity extends AuthedMessage {
+    type: "playerVelocity";
+    payload: {
+        id: string;
+        velocity: Vector;
     }[];
 }
 
@@ -53,6 +62,7 @@ export type ServerMessage = BaseMessage &
         | ServerMessagePlayerJoin
         | ServerMessagePlayerLeave
         | ServerMessagePlayerPosition
+        | ServerMessagePlayerVelocity
         | ServerMessagePlayerName
         | ServerMessagePlayerAttack
     );

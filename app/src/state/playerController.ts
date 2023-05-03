@@ -1,4 +1,4 @@
-import { Vector } from "ld53-lib/types";
+import { ClientMessagePlayerPosition, Vector } from "ld53-lib/types";
 import { STATE } from ".";
 import { createPlayerEntity } from "../entities/player";
 
@@ -66,9 +66,10 @@ export class PlayerController {
         }
     }
 
-    public setPosition(pos: { x: number; y: number }) {
+    public setPosition(pos: Vector, vel?: Vector) {
         const entity = this.getEntity();
         const position = entity?.get("position");
+        const velocity = entity?.get("velocity");
 
         if (!entity || !position) {
             return;
@@ -79,19 +80,42 @@ export class PlayerController {
             return;
         }
 
-        position.x = pos.x;
-        position.y = pos.y;
+        position.set(pos);
+
+        if (vel && velocity) {
+            velocity.set(vel);
+        }
+
+        // if (this.isYou) {
+        //     STATE.conn?.sendAuthed({
+        //         type: "playerPosition",
+        //         payload: {
+        //             position: {
+        //                 x: position.x,
+        //                 y: position.y,
+        //             },
+        //         },
+        //     });
+        // }
+    }
+
+    public setVelocity(vel: Vector) {
+        const entity = this.getEntity();
+        const velocity = entity?.get("velocity");
+
+        if (!entity || !velocity) {
+            return;
+        }
+
+        const changed = velocity.x !== vel.x || velocity.y !== vel.y;
+        if (!changed) {
+            return;
+        }
+
+        velocity.set(vel);
 
         if (this.isYou) {
-            STATE.conn?.sendAuthed({
-                type: "playerPosition",
-                payload: {
-                    position: {
-                        x: position.x,
-                        y: position.y,
-                    },
-                },
-            });
+            this.syncVelocity(vel);
         }
     }
 
@@ -142,5 +166,46 @@ export class PlayerController {
         };
 
         startAttacking();
+    }
+
+    public syncPosition(position: Vector, velocity?: Vector) {
+        if (!this.isYou || !STATE.conn) {
+            return;
+        }
+
+        const payload: ClientMessagePlayerPosition["payload"] = {
+            position: {
+                x: position.x,
+                y: position.y,
+            },
+        };
+
+        if (velocity) {
+            payload.velocity = {
+                x: velocity.x,
+                y: velocity.y,
+            };
+        }
+
+        STATE.conn.sendAuthed({
+            type: "playerPosition",
+            payload,
+        });
+    }
+
+    public syncVelocity(velocity: Vector) {
+        if (!this.isYou || !STATE.conn) {
+            return;
+        }
+
+        STATE.conn.sendAuthed({
+            type: "playerVelocity",
+            payload: {
+                velocity: {
+                    x: velocity.x,
+                    y: velocity.y,
+                },
+            },
+        });
     }
 }

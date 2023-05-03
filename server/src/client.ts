@@ -2,7 +2,9 @@ import {
     ClientMessageJoin,
     ServerMessage,
     ServerMessagePlayerJoin,
+    ServerMessagePlayerPosition,
     Unauthed,
+    Vector,
 } from "ld53-lib/types";
 import * as ws from "ws";
 import { Player } from "./player";
@@ -98,18 +100,45 @@ export class Client {
         );
     }
 
-    public setPlayerPosition(position: { x: number; y: number }) {
-        this.player?.setPosition(position);
+    public setPlayerPosition(position: Vector, velocity?: Vector) {
+        this.player?.setPosition(position, velocity);
+
+        const payload: ServerMessagePlayerPosition["payload"][number] = {
+            id: this.id,
+            position: {
+                x: position.x,
+                y: position.y,
+            },
+        };
+
+        if (velocity) {
+            payload.velocity = {
+                x: velocity.x,
+                y: velocity.y,
+            };
+        }
 
         STATE.server.broadcast(
             {
                 type: "playerPosition",
+                payload: [payload],
+            },
+            this,
+        );
+    }
+
+    public setPlayerVelocity(velocity: Vector) {
+        this.player?.setVelocity(velocity);
+
+        STATE.server.broadcast(
+            {
+                type: "playerVelocity",
                 payload: [
                     {
                         id: this.id,
-                        position: {
-                            x: position.x,
-                            y: position.y,
+                        velocity: {
+                            x: velocity.x,
+                            y: velocity.y,
                         },
                     },
                 ],

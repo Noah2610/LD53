@@ -21,6 +21,14 @@ export interface ClientMessagePlayerPosition extends AuthedMessage {
     type: "playerPosition";
     payload: {
         position: Vector;
+        velocity?: Vector;
+    };
+}
+
+export interface ClientMessagePlayerVelocity extends AuthedMessage {
+    type: "playerVelocity";
+    payload: {
+        velocity: Vector;
     };
 }
 
@@ -41,6 +49,7 @@ export type ClientMessage = BaseMessage &
         | ClientMessageJoin
         | ClientMessageLeave
         | ClientMessagePlayerPosition
+        | ClientMessagePlayerVelocity
         | ClientMessagePlayerName
         | ClientMessagePlayerAttack
     );

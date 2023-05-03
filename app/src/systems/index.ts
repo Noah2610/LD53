@@ -7,6 +7,7 @@ import { HandleDestroy } from "./handleDestroy";
 import { HandleMaxVelocity } from "./handleMaxVelocity";
 import { HandleParentDestroy } from "./handleParentDestroy";
 import { HandleVelocity } from "./handleVelocity";
+import { SyncPlayerPosition } from "./syncPlayerPosition";
 import { UpdateActions } from "./updateActions";
 import { UpdateElementPositions } from "./updateElementPositions";
 
@@ -21,6 +22,8 @@ const SYSTEMS: System[] = [
 
     new HandleAnimationContainers(),
     new HandleAnimations(),
+
+    new SyncPlayerPosition(),
 
     new UpdateElementPositions(),
     new UpdateActions(),

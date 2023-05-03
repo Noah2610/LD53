@@ -42,7 +42,12 @@ export class HandleControls implements System {
                 return;
             }
 
-            // controller.setPosition(pos);
+            // const prev = this.prevVelocity;
+            // if (prev.x !== velocity.x || prev.y !== velocity.y) {
+            // controller.syncVelocity(velocity);
+            // }
+
+            // this.prevVelocity = { x: velocity.x, y: velocity.y };
 
             if (attack === "down") {
                 controller.attack();

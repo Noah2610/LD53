@@ -105,7 +105,10 @@ export class Server {
                 break;
             }
             case "playerPosition": {
-                client.setPlayerPosition(message.payload.position);
+                client.setPlayerPosition(
+                    message.payload.position,
+                    message.payload.velocity,
+                );
                 break;
             }
             case "playerName": {
@@ -114,6 +117,10 @@ export class Server {
             }
             case "playerAttack": {
                 client.playerAttack();
+                break;
+            }
+            case "playerVelocity": {
+                client.setPlayerVelocity(message.payload.velocity);
                 break;
             }
             default: {

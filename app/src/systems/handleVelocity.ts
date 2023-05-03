@@ -6,8 +6,7 @@ export class HandleVelocity implements System {
         for (const { position, velocity } of STATE.query({
             with: ["position", "velocity"],
         })) {
-            position.x += velocity.x;
-            position.y += velocity.y;
+            position.add(velocity);
         }
     }
 }
