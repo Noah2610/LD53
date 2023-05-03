@@ -1,6 +1,7 @@
 import { FPS } from "../config";
 import { HandleAnimations } from "./handleAnimations";
 import { HandleControls } from "./handleControls";
+import { HandleDestroy } from "./handleDestroy";
 import { HandleParentDestroy } from "./handleParentDestroy";
 import { UpdateActions } from "./updateActions";
 import { UpdateElementPositions } from "./updateElementPositions";
@@ -13,6 +14,7 @@ const SYSTEMS: System[] = [
     new UpdateElementPositions(),
     new UpdateActions(),
     new HandleParentDestroy(),
+    new HandleDestroy(),
 ];
 
 export interface System {

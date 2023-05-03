@@ -1,5 +1,10 @@
 import { Vector } from "ld53-lib/types";
-import { Component, ComponentName, ComponentOfName } from "../components";
+import {
+    Component,
+    ComponentName,
+    ComponentOfName,
+    Destroyed,
+} from "../components";
 import { ActionName } from "../config";
 import { Conn } from "../connection";
 import { Entity, EntityId } from "../entities";
@@ -71,8 +76,23 @@ export class State {
         yield* query(q, [...this.entities.values()], this.stores);
     }
 
-    private destroyEntity(entity: Entity) {
+    /**
+     * Marks the entity to be destroyed.
+     */
+    public destroyEntity(entity: Entity) {
         entity.isAlive = false;
+        this.stores.addComponentsToEntity(entity, [new Destroyed()]);
+        // NOTE: components and entity are destroyed in HandleDestroy system
+        // this.stores.removeAllComponentsFromEntity(entity);
+        // this.entities.delete(entity.id);
+    }
+
+    /**
+     * Deletes all components from entity and entity itself.
+     * This function should not be called directly,
+     * instead destroy the entity by running `entity.destroy()` or `STATE.destoryEntity(entity)`.
+     */
+    public deleteEntityNow(entity: Entity) {
         this.stores.removeAllComponentsFromEntity(entity);
         this.entities.delete(entity.id);
     }
