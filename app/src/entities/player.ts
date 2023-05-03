@@ -8,6 +8,7 @@ import {
     MaxVelocity,
     Parent,
     Player,
+    PlayerIsYou,
     PlayerLabel,
     PlayerSword,
     Position,
@@ -110,6 +111,10 @@ export function createPlayerEntity({
         //     ],
         // }),
     );
+
+    if (isYou) {
+        player.add(new PlayerIsYou());
+    }
 
     //     // TODO
     //     // @ts-ignore

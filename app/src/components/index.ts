@@ -9,6 +9,7 @@ import {
     MaxVelocity,
     Parent,
     Player,
+    PlayerIsYou,
     PlayerSword,
     Position,
     Sprite,
@@ -25,6 +26,7 @@ export type Component = BaseComponent &
         | MaxVelocity
         | Parent
         | Player
+        | PlayerIsYou
         | PlayerLabel
         | PlayerSword
         | Position

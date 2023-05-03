@@ -6,6 +6,7 @@ export * from "./element";
 export * from "./maxVelocity";
 export * from "./parent";
 export * from "./player";
+export * from "./playerIsYou";
 export * from "./playerLabel";
 export * from "./playerSword";
 export * from "./position";
