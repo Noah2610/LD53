@@ -6,3 +6,5 @@ _ignore/
 
 logs/
 *.log
+
+*.xcf

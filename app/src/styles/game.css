@@ -22,27 +22,17 @@
 }
 
 .entity {
-    --width: 64px;
-    --height: 64px;
-    --sprite-src: "url(/sprites/larry.png)";
+    /* --width: 64px; */
+    /* --height: 64px; */
 
     position: absolute;
 
-    width: calc(var(--width));
-    height: calc(var(--height));
-
-    background-image: var(--sprite-src);
-
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
+    /* width: var(--width); */
+    /* height: var(--height); */
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /* TODO */
-    image-rendering: pixelated;
 }
 
 .entity-label {
@@ -61,6 +51,27 @@
     text-align: center;
 
     background-color: #ffffff66;
+}
+
+.sprite {
+    --sprite-src: "url(/sprites/larry.png)";
+    --sprite-width: 0px;
+    --sprite-height: 0px;
+    --sprite-x: 0px;
+    --sprite-y: 0px;
+    --image-width: 0px;
+    --image-height: 0px;
+
+    width: var(--sprite-width);
+    height: var(--sprite-height);
+
+    background-image: var(--sprite-src);
+
+    background-position: calc(-1 * var(--sprite-x)) calc(-1 * var(--sprite-y));
+    background-size: var(--image-width) var(--image-height);
+    background-repeat: no-repeat;
+
+    image-rendering: pixelated;
 }
 
 .player {

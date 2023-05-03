@@ -32,10 +32,11 @@ export function createPlayerEntity({
     }
 
     const scale = 2;
-    const size = { x: 11, y: 32 };
+    const size = { x: 16, y: 32 };
+    const spritesheetSize = { x: 64, y: 64 };
     const swordSize = { x: 7, y: 28 };
 
-    for (const s of [size, swordSize]) {
+    for (const s of [size, swordSize, spritesheetSize]) {
         s.x *= scale;
         s.y *= scale;
     }
@@ -48,13 +49,28 @@ export function createPlayerEntity({
             ...PLAYER_CONFIG,
         }),
         new Sprite({
-            src: "/sprites/player.png",
-            size: size,
+            src: "/spritesheets/player.png",
+            size,
+            spritesheetSize,
             classNames: ["player"],
             // label: playerName,
         }),
         new Position({ ...position }),
     );
+
+    // TODO
+    // @ts-ignore
+    window.player = player;
+    let spriteIndex = 0;
+    const spriteCount = 8;
+    setInterval(() => {
+        spriteIndex = (spriteIndex + 1) % spriteCount;
+        if (spriteIndex === 3 || spriteIndex === 7) {
+            spriteIndex = (spriteIndex + 1) % spriteCount;
+        }
+        const sprite = player.get("sprite")!;
+        sprite.setSpriteIndex(spriteIndex);
+    }, 500);
 
     STATE.createEntity(`player-sword-${clientId}`).add(
         new PlayerSword(clientId),
