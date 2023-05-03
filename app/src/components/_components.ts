@@ -1,3 +1,4 @@
+export * from "./animation";
 export * from "./element";
 export * from "./parent";
 export * from "./player";

@@ -1,6 +1,7 @@
 import { Vector } from "ld53-lib/types";
 import { Entity } from ".";
 import {
+    Animation,
     Element,
     Parent,
     Player,
@@ -48,6 +49,7 @@ export function createPlayerEntity({
             playerName,
             ...PLAYER_CONFIG,
         }),
+        new Position({ ...position }),
         new Sprite({
             src: "/spritesheets/player.png",
             size,
@@ -55,22 +57,31 @@ export function createPlayerEntity({
             classNames: ["player"],
             // label: playerName,
         }),
-        new Position({ ...position }),
+        new Animation({
+            frames: [
+                [0, 100],
+                [4, 100],
+                [1, 100],
+                [5, 100],
+                [2, 100],
+                [6, 100],
+            ],
+        }),
     );
 
-    // TODO
-    // @ts-ignore
-    window.player = player;
-    let spriteIndex = 0;
-    const spriteCount = 8;
-    setInterval(() => {
-        spriteIndex = (spriteIndex + 1) % spriteCount;
-        if (spriteIndex === 3 || spriteIndex === 7) {
-            spriteIndex = (spriteIndex + 1) % spriteCount;
-        }
-        const sprite = player.get("sprite")!;
-        sprite.setSpriteIndex(spriteIndex);
-    }, 500);
+    //     // TODO
+    //     // @ts-ignore
+    //     window.player = player;
+    //     let spriteIndex = 0;
+    //     const spriteCount = 8;
+    //     setInterval(() => {
+    //         spriteIndex = (spriteIndex + 1) % spriteCount;
+    //         if (spriteIndex === 3 || spriteIndex === 7) {
+    //             spriteIndex = (spriteIndex + 1) % spriteCount;
+    //         }
+    //         const sprite = player.get("sprite")!;
+    //         sprite.setSpriteIndex(spriteIndex);
+    //     }, 500);
 
     STATE.createEntity(`player-sword-${clientId}`).add(
         new PlayerSword(clientId),

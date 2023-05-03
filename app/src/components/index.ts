@@ -1,6 +1,7 @@
 import { PlayerLabel } from "./playerLabel";
 import { BaseComponent } from "./_baseComponent";
 import {
+    Animation,
     Element,
     Parent,
     Player,
@@ -10,7 +11,16 @@ import {
 } from "./_components";
 
 export type Component = BaseComponent &
-    (Player | Position | Sprite | Parent | Element | PlayerLabel | PlayerSword);
+    (
+        | Animation
+        | Element
+        | Parent
+        | Player
+        | PlayerLabel
+        | PlayerSword
+        | Position
+        | Sprite
+    );
 export type ComponentName = Component["name"];
 export type ComponentOfName<N extends ComponentName> = Component & { name: N };
 
