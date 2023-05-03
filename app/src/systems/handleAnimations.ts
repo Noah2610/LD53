@@ -1,6 +1,6 @@
 import { createTimer, Timer } from "timesub";
 import { System } from ".";
-import { Animation, Sprite } from "../components";
+import { Animation, AnimationContainer, Sprite } from "../components";
 import { EntityId } from "../entities";
 import { STATE } from "../state";
 
@@ -16,24 +16,47 @@ export class HandleAnimations implements System {
     }
 
     public update() {
-        for (const { entity, sprite, animation } of STATE.query({
+        const visitedEntities = new Set<EntityId>();
+
+        for (const {
+            entity,
+            sprite,
+            animation,
+            animationContainer,
+        } of STATE.query({
             with: ["sprite", "animation"],
+            maybe: ["animationContainer"],
         })) {
             if (!entity.isAlive) {
-                this.removeTimerFor(entity.id);
                 continue;
             }
+
+            visitedEntities.add(entity.id);
 
             if (this.playingAnimations.get(entity.id) !== animation.name) {
                 this.removeTimerFor(entity.id);
             }
 
             this.playingAnimations.set(entity.id, animation.name);
-
             const timer = this.getOrStartTimerFor(entity.id, animation);
+
             if (timer.isFinished) {
-                this.nextFrame({ sprite, animation, timer });
+                this.nextFrame({
+                    sprite,
+                    animation,
+                    animationContainer,
+                    timer,
+                });
             }
+        }
+
+        for (const entityId of this.playingAnimations.keys()) {
+            if (visitedEntities.has(entityId)) {
+                continue;
+            }
+
+            this.removeTimerFor(entityId);
+            this.playingAnimations.delete(entityId);
         }
     }
 
@@ -66,10 +89,12 @@ export class HandleAnimations implements System {
     private nextFrame({
         sprite,
         animation,
+        animationContainer,
         timer,
     }: {
         sprite: Sprite;
         animation: Animation;
+        animationContainer?: AnimationContainer;
         timer: Timer;
     }) {
         const frame = animation.nextFrame();
@@ -77,5 +102,10 @@ export class HandleAnimations implements System {
         timer.setDuration(frame[1]);
         timer.reset();
         timer.play();
+
+        // ON ANIMATION LOOP
+        if (animationContainer && animation.frameIndex === 0) {
+            animationContainer.onAnimationLoop();
+        }
     }
 }

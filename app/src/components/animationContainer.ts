@@ -25,15 +25,20 @@ export class AnimationContainer implements BaseComponent {
         this.animationStack = [];
 
         if (defaultAnimation) {
-            this.pushAnimation(defaultAnimation, "loop");
+            this.push(defaultAnimation, "loop");
         }
     }
 
-    public pushAnimation(name: string, behavior: AnimationBehavior) {
+    public push(name: string, behavior: AnimationBehavior) {
         if (!(name in this.animations)) {
             throw new Error(
                 `[AnimationContainer.pushAnimation] Expected animation with name ${name}`,
             );
+        }
+
+        const current = this.getCurrentState();
+        if (current?.name === name) {
+            return;
         }
 
         this.animationStack.push({
@@ -42,8 +47,12 @@ export class AnimationContainer implements BaseComponent {
         });
     }
 
-    public getCurrentAnimation(): (AnimationConfig & AnimationState) | null {
-        const state = this.getCurrentAnimationState();
+    public pop() {
+        this.animationStack.pop();
+    }
+
+    public getCurrent(): (AnimationConfig & AnimationState) | null {
+        const state = this.getCurrentState();
         if (!state) {
             return null;
         }
@@ -55,7 +64,18 @@ export class AnimationContainer implements BaseComponent {
         };
     }
 
-    private getCurrentAnimationState(): AnimationState | null {
+    public onAnimationLoop() {
+        const anim = this.getCurrentState();
+        if (!anim) {
+            return;
+        }
+
+        if (anim.behavior === "once") {
+            this.pop();
+        }
+    }
+
+    private getCurrentState(): AnimationState | null {
         return this.animationStack[this.animationStack.length - 1] || null;
     }
 }

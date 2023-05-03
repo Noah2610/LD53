@@ -19,8 +19,14 @@ export class HandleAnimationContainers implements System {
             with: ["animationContainer"],
             maybe: ["animation"],
         })) {
-            const animData = animationContainer.getCurrentAnimation();
+            const animData = animationContainer.getCurrent();
             if (!animData) {
+                entity.remove("animation");
+                continue;
+            }
+
+            const playingAnim = this.playingAnimations.get(entity.id);
+            if (playingAnim === animData.name) {
                 continue;
             }
 
@@ -34,11 +40,8 @@ export class HandleAnimationContainers implements System {
                 animation = animationOpt;
             }
 
-            const playingAnim = this.playingAnimations.get(entity.id);
-            if (playingAnim !== animData.name) {
-                animation.setAnimation(animData);
-                this.playingAnimations.set(entity.id, animData.name);
-            }
+            animation.setAnimation(animData);
+            this.playingAnimations.set(entity.id, animData.name);
 
             // if (this.playingAnimations.has(entity.id)) {
             //     // check if finished
