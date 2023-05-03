@@ -1,15 +1,26 @@
 import { BaseComponent } from "./_baseComponent";
 
+export interface AnimationConfig {
+    name: string;
+    frames: AnimationFrame[];
+}
+
 /** array of [index, ms] */
-type AnimationFrame = [number, number];
+export type AnimationFrame = [number, number];
 
 export class Animation implements BaseComponent {
     public readonly name: "animation" = "animation";
 
-    public frames: AnimationFrame[];
-    public frameIndex: number;
+    public animationName!: string;
+    public frames!: AnimationFrame[];
+    public frameIndex!: number;
 
-    constructor({ frames }: { frames: AnimationFrame[] }) {
+    constructor(animation: AnimationConfig) {
+        this.setAnimation(animation);
+    }
+
+    public setAnimation({ name, frames }: AnimationConfig) {
+        this.animationName = name;
         this.frames = frames;
         this.frameIndex = 0;
     }

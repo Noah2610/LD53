@@ -2,6 +2,7 @@ import { Vector } from "ld53-lib/types";
 import { Entity } from ".";
 import {
     Animation,
+    AnimationContainer,
     Element,
     Parent,
     Player,
@@ -57,16 +58,49 @@ export function createPlayerEntity({
             classNames: ["player"],
             // label: playerName,
         }),
-        new Animation({
-            frames: [
-                [0, 100],
-                [4, 100],
-                [1, 100],
-                [5, 100],
-                [2, 100],
-                [6, 100],
+        new AnimationContainer(
+            [
+                {
+                    name: "one",
+                    frames: [
+                        [0, 500],
+                        [1, 500],
+                        [2, 500],
+                    ],
+                },
+                {
+                    name: "two",
+                    frames: [
+                        [4, 500],
+                        [5, 500],
+                        [6, 500],
+                    ],
+                },
+                {
+                    name: "mixed",
+                    frames: [
+                        [0, 100],
+                        [4, 100],
+                        [1, 100],
+                        [5, 100],
+                        [2, 100],
+                        [6, 100],
+                    ],
+                },
             ],
-        }),
+            "one",
+        ),
+        // new Animation({
+        //     name: "mixed",
+        //     frames: [
+        //         [0, 100],
+        //         [4, 100],
+        //         [1, 100],
+        //         [5, 100],
+        //         [2, 100],
+        //         [6, 100],
+        //     ],
+        // }),
     );
 
     //     // TODO

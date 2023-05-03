@@ -2,6 +2,7 @@ import { PlayerLabel } from "./playerLabel";
 import { BaseComponent } from "./_baseComponent";
 import {
     Animation,
+    AnimationContainer,
     Destroyed,
     Element,
     Parent,
@@ -14,6 +15,7 @@ import {
 export type Component = BaseComponent &
     (
         | Animation
+        | AnimationContainer
         | Destroyed
         | Element
         | Parent

@@ -1,4 +1,5 @@
 import { FPS } from "../config";
+import { HandleAnimationContainers } from "./handleAnimationContainers";
 import { HandleAnimations } from "./handleAnimations";
 import { HandleControls } from "./handleControls";
 import { HandleDestroy } from "./handleDestroy";
@@ -10,6 +11,7 @@ const MS_PER_UPDATE = FPS / 60;
 
 const SYSTEMS: System[] = [
     new HandleControls(),
+    new HandleAnimationContainers(),
     new HandleAnimations(),
     new UpdateElementPositions(),
     new UpdateActions(),

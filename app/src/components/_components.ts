@@ -1,4 +1,5 @@
 export * from "./animation";
+export * from "./animationContainer";
 export * from "./destroyed";
 export * from "./element";
 export * from "./parent";

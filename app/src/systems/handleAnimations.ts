@@ -8,9 +8,11 @@ const TIMER_UPDATE_INTERVAL = 10;
 
 export class HandleAnimations implements System {
     private timers: Map<EntityId, Timer>;
+    private playingAnimations: Map<EntityId, string>;
 
     constructor() {
         this.timers = new Map();
+        this.playingAnimations = new Map();
     }
 
     public update() {
@@ -21,6 +23,12 @@ export class HandleAnimations implements System {
                 this.removeTimerFor(entity.id);
                 continue;
             }
+
+            if (this.playingAnimations.get(entity.id) !== animation.name) {
+                this.removeTimerFor(entity.id);
+            }
+
+            this.playingAnimations.set(entity.id, animation.name);
 
             const timer = this.getOrStartTimerFor(entity.id, animation);
             if (timer.isFinished) {
