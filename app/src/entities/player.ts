@@ -3,13 +3,16 @@ import { Entity } from ".";
 import {
     Animation,
     AnimationContainer,
+    DecreaseVelocity,
     Element,
+    MaxVelocity,
     Parent,
     Player,
     PlayerLabel,
     PlayerSword,
     Position,
     Sprite,
+    Velocity,
 } from "../components";
 import { PLAYER_CONFIG } from "../config";
 import { STATE } from "../state";
@@ -43,6 +46,8 @@ export function createPlayerEntity({
         s.y *= scale;
     }
 
+    const { speed, deceleration } = PLAYER_CONFIG;
+
     const player = STATE.createEntity(getEntityIdFrom(clientId)).add(
         new Player({
             isYou,
@@ -58,6 +63,9 @@ export function createPlayerEntity({
             classNames: ["player"],
             // label: playerName,
         }),
+        new Velocity({ x: 0, y: 0 }),
+        new MaxVelocity({ x: speed, y: speed }),
+        new DecreaseVelocity({ x: deceleration, y: deceleration }),
         new AnimationContainer(
             [
                 {

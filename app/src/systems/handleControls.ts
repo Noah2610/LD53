@@ -3,14 +3,14 @@ import { STATE } from "../state";
 
 export class HandleControls implements System {
     public update() {
-        for (const { player, position } of STATE.query({
-            with: ["player", "position"],
+        for (const { player, velocity } of STATE.query({
+            with: ["player", "velocity"],
         })) {
             if (!player.isYou) {
                 continue;
             }
 
-            const STEP = player.speed;
+            const STEP = player.acceleration;
 
             const up = STATE.actions.get("up");
             const down = STATE.actions.get("down");
@@ -24,19 +24,17 @@ export class HandleControls implements System {
                 continue;
             }
 
-            const pos = { x: position.x, y: position.y };
-
             if (up) {
-                pos.y -= STEP;
+                velocity.add({ y: -STEP });
             }
             if (down) {
-                pos.y += STEP;
+                velocity.add({ y: STEP });
             }
             if (left) {
-                pos.x -= STEP;
+                velocity.add({ x: -STEP });
             }
             if (right) {
-                pos.x += STEP;
+                velocity.add({ x: STEP });
             }
 
             const controller = STATE.getPlayer(player.id);
@@ -44,7 +42,7 @@ export class HandleControls implements System {
                 return;
             }
 
-            controller.setPosition(pos);
+            // controller.setPosition(pos);
 
             if (attack === "down") {
                 controller.attack();

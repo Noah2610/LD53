@@ -6,6 +6,7 @@ export class Player implements BaseComponent {
     public id: string;
     public playerName: string;
     public speed: number;
+    public acceleration: number;
     public attackDelayMs: number;
 
     public isAttacking: boolean;
@@ -15,18 +16,21 @@ export class Player implements BaseComponent {
         id,
         playerName,
         speed,
+        acceleration,
         attackDelayMs,
     }: {
         isYou: boolean;
         id: string;
         playerName: string;
         speed: number;
+        acceleration: number;
         attackDelayMs: number;
     }) {
         this.isYou = isYou;
         this.id = id;
         this.playerName = playerName;
         this.speed = speed;
+        this.acceleration = acceleration;
         this.attackDelayMs = attackDelayMs;
 
         this.isAttacking = false;

@@ -14,5 +14,7 @@ export const FPS = 60;
 
 export const PLAYER_CONFIG = {
     speed: 2,
+    acceleration: 0.5,
+    deceleration: 0.1,
     attackDelayMs: 1000,
 };
