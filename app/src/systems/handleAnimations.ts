@@ -1,8 +1,10 @@
 import { createTimer, Timer } from "timesub";
 import { System } from ".";
 import { Animation, Sprite } from "../components";
-import { Entity, EntityId } from "../entities";
+import { EntityId } from "../entities";
 import { STATE } from "../state";
+
+const TIMER_UPDATE_INTERVAL = 10;
 
 export class HandleAnimations implements System {
     private timers: Map<EntityId, Timer>;
@@ -15,22 +17,42 @@ export class HandleAnimations implements System {
         for (const { entity, sprite, animation } of STATE.query({
             with: ["sprite", "animation"],
         })) {
-            const timer = this.getTimerFor(entity.id, animation);
+            if (!entity.isAlive) {
+                this.removeTimerFor(entity.id);
+                continue;
+            }
+
+            const timer = this.getOrStartTimerFor(entity.id, animation);
             if (timer.isFinished) {
                 this.nextFrame({ sprite, animation, timer });
             }
         }
     }
 
-    private getTimerFor(entityId: EntityId, animation: Animation) {
+    private getOrStartTimerFor(entityId: EntityId, animation: Animation) {
         if (!this.timers.has(entityId)) {
             const timer = createTimer({
                 duration: animation.getCurrentFrame()[1],
+                updateInterval: TIMER_UPDATE_INTERVAL,
             });
             timer.play();
             this.timers.set(entityId, timer);
         }
         return this.timers.get(entityId)!;
+    }
+
+    private getTimerFor(entityId: EntityId): Timer | null {
+        return this.timers.get(entityId) ?? null;
+    }
+
+    private removeTimerFor(entityId: EntityId) {
+        const timer = this.getTimerFor(entityId);
+        if (!timer) {
+            return;
+        }
+
+        timer.reset();
+        this.timers.delete(entityId);
     }
 
     private nextFrame({
