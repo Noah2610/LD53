@@ -59,8 +59,8 @@
     --sprite-height: 0px;
     --sprite-x: 0px;
     --sprite-y: 0px;
-    --image-width: 0px;
-    --image-height: 0px;
+    --image-width: var(--sprite-width);
+    --image-height: var(--sprite-height);
 
     width: var(--sprite-width);
     height: var(--sprite-height);
