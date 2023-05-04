@@ -6,6 +6,7 @@ import {
     DecreaseVelocity,
     Element,
     Facing,
+    Follow,
     MaxVelocity,
     Parent,
     Player,
@@ -138,8 +139,15 @@ export function createPlayerEntity({
             size: { ...swordSize },
             classNames: ["player-sword"],
         }),
-        new Position({ x: size.x, y: size.y / 2 - swordSize.y / 2 - 8 }),
+        // new Position({ x: size.x, y: size.y / 2 - swordSize.y / 2 - 8 }),
+        new Position({ x: 0, y: 0 }),
         new Parent(player.id),
+        new Follow(player.id, {
+            offset: {
+                x: size.x,
+                y: size.y / 2 - swordSize.y / 2 - 8,
+            },
+        }),
         // new Facing("down"),
     );
 
@@ -148,10 +156,17 @@ export function createPlayerEntity({
     labelEl.innerText = playerName;
 
     STATE.createEntity(`player-label-${clientId}`).add(
-        new Element(labelEl),
-        new Position({ x: size.x / 2, y: 0 }),
-        new Parent(player.id),
         new PlayerLabel({ playerId: clientId, isYou }),
+        new Element(labelEl),
+        // new Position({ x: size.x / 2, y: 0 }),
+        new Position({ x: 0, y: 0 }),
+        new Parent(player.id),
+        new Follow(player.id, {
+            offset: {
+                x: size.x / 2,
+                y: 0,
+            },
+        }),
     );
 
     return player;

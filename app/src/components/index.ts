@@ -7,6 +7,7 @@ import {
     Destroyed,
     Element,
     Facing,
+    Follow,
     MaxVelocity,
     Parent,
     Player,
@@ -25,6 +26,7 @@ export type Component = BaseComponent &
         | Destroyed
         | Element
         | Facing
+        | Follow
         | MaxVelocity
         | Parent
         | Player

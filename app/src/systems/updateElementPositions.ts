@@ -1,44 +1,31 @@
 import { Vector } from "ld53-lib/types";
 import { System } from ".";
-import { Parent, Position } from "../components";
+import { Position } from "../components";
 import { STATE } from "../state";
 
 export class UpdateElementPositions implements System {
     public update() {
-        for (const { position, sprite, parent } of STATE.query({
+        for (const { position, sprite } of STATE.query({
             with: ["position", "sprite"],
-            maybe: ["parent"],
         })) {
-            this.handlePosition({ position, el: sprite.el, parent });
+            this.handlePosition({ position, el: sprite.el });
         }
 
-        for (const { position, element, parent } of STATE.query({
+        for (const { position, element } of STATE.query({
             with: ["position", "element"],
-            maybe: ["parent"],
         })) {
-            this.handlePosition({ position, el: element.element, parent });
+            this.handlePosition({ position, el: element.element });
         }
     }
 
     private handlePosition({
         position,
         el,
-        parent,
     }: {
         position: Position;
         el: HTMLElement;
-        parent?: Parent;
     }) {
         const pos = { x: position.x, y: position.y };
-
-        if (parent) {
-            const parentPos = STATE.getComponentOf(parent.parentId, "position");
-            if (parentPos) {
-                pos.x += parentPos.x;
-                pos.y += parentPos.y;
-            }
-        }
-
         this.setElementPosition(el, pos);
     }
 

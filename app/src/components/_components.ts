@@ -4,6 +4,7 @@ export * from "./decreaseVelocity";
 export * from "./destroyed";
 export * from "./element";
 export * from "./facing";
+export * from "./follow";
 export * from "./maxVelocity";
 export * from "./parent";
 export * from "./player";
