@@ -1,3 +1,4 @@
+import { FpsCounter } from "../components/fpsCounter";
 import { FPS } from "../config";
 import { HandleAnimationContainers } from "./handleAnimationContainers";
 import { HandleAnimations } from "./handleAnimations";
@@ -34,6 +35,8 @@ const SYSTEMS: System[] = [
     new UpdateActions(),
     new HandleParentDestroy(),
     new HandleDestroy(),
+
+    new FpsCounter(),
 ];
 
 export interface System {
