@@ -45,8 +45,26 @@ export interface System {
 }
 
 export function setupSystems() {
+    let lastUpdate = new Date();
+
+    function onFrame() {
+        const now = new Date();
+
+        const delta = now.getTime() - lastUpdate.getTime();
+        if (delta >= MS_PER_UPDATE) {
+            update();
+            lastUpdate = now;
+        }
+
+        nextFrame();
+    }
+
+    const nextFrame = () => window.requestAnimationFrame(onFrame);
+
+    nextFrame();
+
     // TODO
-    setInterval(update, MS_PER_UPDATE);
+    // setInterval(update, MS_PER_UPDATE);
     // const timer = createTimer({
     //     duration: "infinite",
     //     updateInterval: MS_PER_UPDATE,
