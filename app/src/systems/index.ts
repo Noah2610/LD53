@@ -45,15 +45,19 @@ export interface System {
 }
 
 export function setupSystems() {
-    let lastUpdate = new Date();
+    let lastFrameAt = new Date();
+    let timeElapsed = 0;
 
     function onFrame() {
         const now = new Date();
 
-        const delta = now.getTime() - lastUpdate.getTime();
-        if (delta >= MS_PER_UPDATE) {
+        const delta = now.getTime() - lastFrameAt.getTime();
+        lastFrameAt = now;
+        timeElapsed += delta;
+
+        if (timeElapsed >= MS_PER_UPDATE) {
             update();
-            lastUpdate = now;
+            timeElapsed = timeElapsed - MS_PER_UPDATE;
         }
 
         nextFrame();
