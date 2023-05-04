@@ -5,6 +5,7 @@ import {
     AnimationContainer,
     DecreaseVelocity,
     Element,
+    Facing,
     MaxVelocity,
     Parent,
     Player,
@@ -139,6 +140,7 @@ export function createPlayerEntity({
         }),
         new Position({ x: size.x, y: size.y / 2 - swordSize.y / 2 - 8 }),
         new Parent(player.id),
+        // new Facing("down"),
     );
 
     const labelEl = document.createElement("div");

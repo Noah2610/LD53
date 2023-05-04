@@ -3,6 +3,7 @@ export * from "./animationContainer";
 export * from "./decreaseVelocity";
 export * from "./destroyed";
 export * from "./element";
+export * from "./facing";
 export * from "./maxVelocity";
 export * from "./parent";
 export * from "./player";
