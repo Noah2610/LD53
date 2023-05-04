@@ -11,7 +11,8 @@ source "${REPO_ROOT}/bin/share.sh"
 avail "yarn"
 
 function cleanup {
-    kill_processes "$$"
+    # kill_processes "$$"
+    [ -n "$SERVER_PID" ] && kill "$SERVER_PID"
 }
 
 trap cleanup EXIT
@@ -40,4 +41,7 @@ build_pkg "lib"
 build_pkg "server"
 build_pkg "app"
 
-run_pkg "server" & run_pkg "app"
+run_pkg "server" &
+SERVER_PID=$!
+
+run_pkg "app"
