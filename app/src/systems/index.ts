@@ -1,3 +1,4 @@
+import { createTimer } from "timesub";
 import { FpsCounter } from "../components/fpsCounter";
 import { FPS } from "../config";
 import { HandleAnimationContainers } from "./handleAnimationContainers";
@@ -14,7 +15,7 @@ import { SyncPlayerPosition } from "./syncPlayerPosition";
 import { UpdateActions } from "./updateActions";
 import { UpdateElementPositions } from "./updateElementPositions";
 
-const MS_PER_UPDATE = FPS / 60;
+const MS_PER_UPDATE = 1000 / FPS;
 
 const SYSTEMS: System[] = [
     new HandleControls(),
@@ -46,6 +47,12 @@ export interface System {
 export function setupSystems() {
     // TODO
     setInterval(update, MS_PER_UPDATE);
+    // const timer = createTimer({
+    //     duration: "infinite",
+    //     updateInterval: MS_PER_UPDATE,
+    // });
+    // timer.on("update", update);
+    // timer.play();
 }
 
 function update() {
