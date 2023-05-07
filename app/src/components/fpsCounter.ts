@@ -34,6 +34,10 @@ export class FpsCounter implements System {
     }
 
     private displayAverage() {
+        if (this.fpsNumbers.length === 0) {
+            return;
+        }
+
         const avg =
             this.fpsNumbers.reduce((a, b) => a + b, 0) / this.fpsNumbers.length;
         this.fpsEl.innerText = avg.toFixed(2).padStart(2, "0");
