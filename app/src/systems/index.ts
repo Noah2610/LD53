@@ -13,6 +13,7 @@ import { HandleParentDestroy } from "./handleParentDestroy";
 import { HandleVelocity } from "./handleVelocity";
 import { SyncPlayerPosition } from "./syncPlayerPosition";
 import { UpdateActions } from "./updateActions";
+import { UpdateCollisions } from "./updateCollisions";
 import { UpdateElementPositions } from "./updateElementPositions";
 
 const MS_PER_UPDATE = 1000 / FPS;
@@ -23,6 +24,8 @@ const SYSTEMS: System[] = [
     new HandleMaxVelocity(),
     new HandleVelocity(),
     new HandleDecreaseVelocity(),
+
+    new UpdateCollisions(),
 
     new HandleAnimationContainers(),
     new HandleAnimations(),
