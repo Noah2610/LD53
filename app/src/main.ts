@@ -4,11 +4,18 @@ import { ActionName, ACTIONS } from "./config";
 import { setupSocket } from "./connection";
 import { STATE } from "./state";
 import { setupSystems } from "./systems";
+import { createBlockEntity } from "./entities/block";
 
 async function main() {
     setupControls();
     setupPlayerNameInput();
     setupSystems();
+
+    // TODO
+    createBlockEntity({
+        position: { x: 512, y: 512 },
+        size: { x: 64, y: 64 },
+    });
 
     // TODO:
     // this player <-> socket sync doesn't belong here...

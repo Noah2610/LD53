@@ -105,14 +105,38 @@ export function createPlayerEntity({
         ),
         new Hitbox([
             {
-                x1: -size.x / 2,
-                y1: -size.y / 2,
-                x2: size.x / 2,
-                y2: size.y / 2,
+                x1: 5,
+                y1: 5,
+                x2: size.x - 5,
+                y2: size.y - 5,
             },
         ]),
-        new Collider({ tag: "player", collidesWith: [] }),
+        new Collider({ tag: "player", collidesWith: ["block"] }),
     );
+
+    // TODO debug
+    {
+        const hitbox = player.get("hitbox")!;
+        const sprite = player.get("sprite")!;
+
+        const playerEl = sprite.el;
+
+        for (const rect of hitbox.hitboxes) {
+            const x = rect.x1;
+            const y = rect.y1;
+            const w = rect.x2 - rect.x1;
+            const h = rect.y2 - rect.y1;
+
+            const el = document.createElement("div");
+            el.classList.add("hitbox");
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            el.style.width = `${w}px`;
+            el.style.height = `${h}px`;
+
+            playerEl.appendChild(el);
+        }
+    }
 
     if (isYou) {
         player.add(new PlayerIsYou());
