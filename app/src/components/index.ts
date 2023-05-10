@@ -3,11 +3,14 @@ import { BaseComponent } from "./_baseComponent";
 import {
     Animation,
     AnimationContainer,
+    Collidable,
+    Collider,
     DecreaseVelocity,
     Destroyed,
     Element,
     Facing,
     Follow,
+    Hitbox,
     MaxVelocity,
     Parent,
     Player,
@@ -22,11 +25,14 @@ export type Component = BaseComponent &
     (
         | Animation
         | AnimationContainer
+        | Collidable
+        | Collider
         | DecreaseVelocity
         | Destroyed
         | Element
         | Facing
         | Follow
+        | Hitbox
         | MaxVelocity
         | Parent
         | Player

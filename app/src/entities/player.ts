@@ -3,10 +3,12 @@ import { Entity } from ".";
 import {
     Animation,
     AnimationContainer,
+    Collider,
     DecreaseVelocity,
     Element,
     Facing,
     Follow,
+    Hitbox,
     MaxVelocity,
     Parent,
     Player,
@@ -101,17 +103,15 @@ export function createPlayerEntity({
             ],
             "one",
         ),
-        // new Animation({
-        //     name: "mixed",
-        //     frames: [
-        //         [0, 100],
-        //         [4, 100],
-        //         [1, 100],
-        //         [5, 100],
-        //         [2, 100],
-        //         [6, 100],
-        //     ],
-        // }),
+        new Hitbox([
+            {
+                x1: -size.x / 2,
+                y1: -size.y / 2,
+                x2: size.x / 2,
+                y2: size.y / 2,
+            },
+        ]),
+        new Collider({ tag: "player", collidesWith: [] }),
     );
 
     if (isYou) {
